@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# This script manages a scratchpad terminal using Alacritty and tmux, allowing
+# you to toggle the visibility of the terminal window with a specific class name
+# ('scratchpad-term'). It checks if a terminal with the class 'scratchpad-term'
+# is already open. If not, it launches a new Alacritty terminal with tmux. If
+# the terminal is already open, it toggles its visibility using a temporary file
+# as a state indicator.
+
+# How it works:
+# 1. Searches for a window with the class name 'scratchpad-term'.
+# 2. If no such window is found, it opens a new Alacritty terminal running tmux
+#    with the specified class.
+# 3. If the window exists:
+#    - If the file /tmp/scratchpad-term does not exist, it creates the file and hides the window.
+#    - If the file /tmp/scratchpad-term exists, it removes the file and shows the window.
+
+winclass="$(xdotool search --class scratchpad-btop)"
+if [ -z "$winclass" ]; then
+  alacritty --class scratchpad-btop -e bash -c "tmux -u new-session -d 'btop'; tmux attach"
+else
+  if [ ! -f /tmp/scratchpad-btop ]; then
+    touch /tmp/scratchpad-btop && xdotool windowunmap "$winclass"
+  elif [ -f /tmp/scratchpad-term ]; then
+    rm /tmp/scratchpad-btop && xdotool windowmap "$winclass"
+  fi
+fi
