@@ -37,5 +37,12 @@ return {
 			silent = true,
 			desc = "Toggle Nvim Tree",
 		},
+		{
+			"<C-Space>",
+			":NvimTreeCollapse<CR>",
+			mode = "n",
+			silent = true,
+			desc = "Collapse Nvim Tree",
+		},
 	},
 }

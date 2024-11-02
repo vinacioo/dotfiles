@@ -9,7 +9,7 @@ setxkbmap -option caps:escape &
 sxhkd &
 
 # flash window
-flashfocus &
+/home/vinacio/.pyenv/versions/ds-env/bin/flashfocus &
 
 # screenshot
 flameshot &

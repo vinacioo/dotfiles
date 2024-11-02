@@ -75,3 +75,6 @@ map("n", "x", '"_x', { desc = "Delete character without register" })
 
 -- Toggle relative number
 map("n", "<leader>rl", ':lua require("utils.toggle_rn").toggle_number_mode()<CR>', { noremap = true, silent = true })
+
+-- Copy inside ""
+map("n", "<leader>y", 'yi"', { desc = 'Yank inside "" ' })

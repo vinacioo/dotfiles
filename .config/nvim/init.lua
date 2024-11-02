@@ -9,4 +9,4 @@ require("config.autocmds")
 require("config.keymaps")
 
 -- Set terminal background
-require("utils.set-terminal-bg").setup()
+-- require("utils.set-terminal-bg-wez").setup()

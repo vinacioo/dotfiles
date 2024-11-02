@@ -9,5 +9,5 @@ padding = { x = 10, y = 10 }
 
 # Default colors
 [colors.primary]
-background = '#1e2122'
+background = '#101010'
 
