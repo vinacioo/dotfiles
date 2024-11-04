@@ -109,7 +109,8 @@ alias ls='eza --group-directories-first --icons=always -l'
 # to cd and ls after
 function cdls() {
 	chdir $@
-    eza --group-directories-first --icons=always -l
+    eza --group-directories-first -l
+    # eza --group-directories-first --icons=always -l
 }
 alias cd='cdls'
 

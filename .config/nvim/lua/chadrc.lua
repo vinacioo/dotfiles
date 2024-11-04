@@ -1,13 +1,13 @@
 local options = {
 
 	base46 = {
-		theme = "nightlamp", -- default theme
+		theme = "gruvchad", -- default theme
 		hl_add = {},
 		hl_override = {},
 		integrations = {},
 		changed_themes = {},
 		transparency = false,
-		theme_toggle = { "nightlamp", "one_light" },
+		theme_toggle = { "gruvchad", "one_light" },
 	},
 
 	ui = {
