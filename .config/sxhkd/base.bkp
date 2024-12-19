@@ -1,0 +1,392 @@
+#! /usr/bin/dash
+
+## Launchers
+
+# Show application launcher
+super + d
+	wmrc call ui/rofi start
+
+# Show quick file browser
+super + grave
+	wmrc call ui/rofi files
+
+# Show character menu
+super + z
+	wmrc call ui/rofi character
+
+# Show calculator
+super + @less
+	wmrc call ui/rofi calc
+
+## Applications
+
+# Launch terminal
+super + Return
+	$WMRC_TERMINAL
+
+# Launch terminal as root
+super + shift + Return
+	$WMRC_TERMINAL -e sudo /usr/bin/fish
+
+# Launch scratchpad terminal
+super + BackSpace
+	$WMRC_TERMINAL -e tmux new-session -A -s scratchpad
+
+# Launch Firefox
+super + b
+	$WMRC_BROWSER
+
+# Disable Firefox quit shortcut (ignore)
+ctrl + q
+	xprop -id "$(bspc query -N -n)" | grep -q 'WM_CLASS.*firefox' || \
+	xdotool keydown ctrl key q keyup ctrl
+
+# Launch Firefox in private mode
+super + shift + b
+	firefox -private-window
+
+# Launch file manager
+super + n
+	$WMRC_FILEMGR
+
+# Launch file manager as root
+super + shift + n
+	sudo $WMRC_FILEMGR
+
+# Launch default mail client
+super + m
+	$WMRC_MAILCLIENT
+
+# Launch Visual Studio Code
+super + v
+	code
+
+# Launch KeePassXC
+super + k
+	keepassxc
+
+# Launch default visual text editor
+super + e
+	$VISUAL
+
+# Print screen (capture region)
+{super + p, Print}
+	mkdir -p "$HOME/Pictures/Screenshots" && \
+	flameshot gui
+
+# Print screen to clipboard (focused monitor)
+{super + shift + p, shift + Print}
+	mkdir -p "$HOME/Pictures/Screenshots" && \
+	flameshot screen -c
+
+# Record screen
+{super + alt + p, alt + Print}
+	peek
+
+## Window control
+
+# Close application
+super + shift + q
+	bspc node -c
+
+# Kill application
+super + ctrl + shift + q
+	bspc node -k
+
+## Window selection
+
+# Switch to last node / desktop
+{alt, super} + @Tab
+	bspc {node,desktop} --focus last
+
+# Change window tiling mode
+super + shift + @space
+	if [ "$(bspc query -N -n focused.floating)" ]; then \
+		bspc node focused -t pseudo_tiled; \
+	elif [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node focused -t floating; \
+	else \
+		bspc node focused -t tiled; \
+	fi
+
+# Select window if tiled
+super + {@Up,@Down,@Left,@Right}
+	if [ -z "$(bspc query -N -n focused.floating)" ]; then \
+		dir={north,south,west,east}; \
+		bspc node -f $dir || \
+		bspc monitor -f $dir; \
+	fi
+
+# Move window if tiled
+super + shift + {@Up,@Down,@Left,@Right}
+	if [ -z "$(bspc query -N -n focused.floating)" ]; then \
+		node=$(bspc query -N -n); \
+		desktop=$(bspc query -D -d); \
+		dir={north,south,west,east}; \
+		bspc node -f $dir.local && \
+		bspc node -f ${node} && \
+		bspc node -s $dir || \
+		bspc node -m $dir; \
+		bspc node -f ${node}; \
+	fi
+
+# Move window if floating
+super + {Up,Down,Left,Right}
+	if [ "$(bspc query -N -n focused.floating)" ]; then \
+		bspc node -v {0 -10,0 10,-10 0,10 0}; \
+	fi
+
+## Window manipulation
+
+# Move focused window to desktop on current monitor
+super + shift + {0-9}
+	bspc node -d {0-9}.local -f
+
+# Move focused window to neighbouring desktop on current monitor
+super + shift + {@Home,@End}
+	bspc node -d {prev,next}.local -f
+
+# Toggle monocle mode for focused window
+super + f
+	bspc desktop -l next
+
+# Sift through windows in monocle mode
+super + {comma,period}
+  bspc node -f {next,prev}.local
+
+# Toggle fullscreen mode for focused window
+super + shift + f
+	bspc node -t ~fullscreen
+
+# Swap places of current and last focused window
+super + w
+	bspc node -s last
+
+# Bring last focused window to current subnode
+super + shift + w
+	cur="$(bspc query -N -n focused)"; \
+	last="$(bspc query -N -n last)"; \
+	bspc node -i; \
+	rec="$(bspc query -N -n '.leaf.!window')"; \
+	bspc node -f "$last"; \
+	bspc node -n "$rec"; \
+	bspc node -f "$last"
+
+# Toggle node attributes: marked, locked, sticky, private, hidden
+super + alt + {m,l,s,p,h}
+	bspc node -g {marked,locked,sticky,private,hidden}
+
+## Window size and rotation
+
+# Resize window (Up)
+super + alt + @Up
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z bottom 0 -10 || \
+		bspc node -z top 0 -10; \
+	else \
+		bspc node -z bottom 0 -10; \
+	fi
+
+# Resize window (Down)
+super + alt + @Down
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z bottom 0 +10 || \
+		bspc node -z top 0 +10; \
+	else \
+		bspc node -z bottom 0 +10; \
+	fi
+
+# Resize window (Left)
+super + alt + @Left
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z left -10 0 || \
+		bspc node -z right -10 0; \
+	else \
+		bspc node -z right -10 0; \
+	fi
+
+# Resize window (Right)
+super + alt + @Right
+	if [ "$(bspc query -N -n focused.tiled)" ]; then \
+		bspc node -z left +10 0 || \
+		bspc node -z right +10 0; \
+	else \
+		bspc node -z right +10 0; \
+	fi
+
+# Rotate current leaf
+super + r
+	bspc node @parent -R 90
+
+# Rotate current display
+super + shift + r
+	bspc node @/ -R 90
+
+# Balance nodes on current desktop
+super + F5
+	bspc node @/ -B
+
+## Desktop and monitor
+
+# Change desktop on current monitor
+super + {0-9}
+	bspc monitor -f "$(bspc query -M -m)"; \
+	bspc desktop -f {0-9}.local
+
+# Change desktop on all monitors
+super + alt + {0-9}
+	cur="$(bspc query -M -m)"; \
+	for m in $(bspc query -M); do \
+		bspc monitor -f "$m"; \
+		bspc desktop -f {0-9}.local; \
+	done; \
+	bspc monitor -f "$cur";
+
+# Move through neighbouring desktops on current monitor
+super + {@Home,@End}
+	bspc desktop -f {prev,next}.local
+
+# Move through neighbouring desktops on all monitors
+super + alt + {@Home,@End}
+	cur="$(bspc query -M -m)"; \
+	for m in $(bspc query -M); do \
+		bspc monitor -f "$m"; \
+		bspc desktop -f {prev,next}.local; \
+	done; \
+	bspc monitor -f "$cur";
+
+## Node tree manipulation
+
+# Select parent node
+super + @F1
+	bspc node -f @parent
+
+## Bspwm
+
+# Quit bspwm
+super + shift + e : Return
+	bspc quit 1
+
+# Reload config
+super + alt + r
+	if wmrc unit reload; then \
+		wmrc call services/notifications notify -u low -i software-update-available \
+			'wmrc' 'Desktop configuration reloaded successfully.'; \
+	else \
+		wmrc call services/notifications notify -u low -i error \
+			'wmrc' 'An error occurred while reloading desktop configuration.'; \
+	fi
+
+## Input device control
+
+# Toggle enable touchscreen input
+super + alt + t
+	wmrc call hid/device toggle touchscreen
+
+# Toggle enable mouse and touchpad input
+super + shift + t
+	wmrc call hid/device toggle mouse; \
+	wmrc call hid/device toggle touchpad
+
+## System lock and power
+
+# Sleep
+super + @Delete
+	wmrc unit suspend
+
+# Shut down
+super + shift + @Delete : Return
+	wmrc call hardware/power off
+
+# Reboot
+super + shift + ctrl + @Delete : Return
+	wmrc call hardware/power reboot
+
+# Hibernate
+super + alt + @Delete
+	wmrc unit hibernate
+
+# Lock the device using physlock
+XF86Launch1
+	physlock -m -d
+
+# Lock screen and turn off screen
+super + l
+	wmrc unit lock
+
+## Multimedia keys
+
+# Change volume using standard keys for default sink
+super + {Prior, Next}
+	wmrc call hardware/audio speakers_volume_{increase,decrease}
+
+# Change volume using media keys for default sink
+{XF86AudioRaiseVolume,XF86AudioLowerVolume}
+	wmrc call hardware/audio speakers_volume_{increase,decrease}
+
+# Toggle volume using standard keys for default sink
+super + Insert
+	wmrc call hardware/audio speakers_toggle_mute
+
+# Toggle volume using media keys for default sink
+XF86AudioMute
+	wmrc call hardware/audio speakers_toggle_mute
+
+# Change internal monitor brightness using media keys
+super + {XF86AudioLowerVolume,XF86AudioRaiseVolume}
+	wmrc call screen/backlight {decrease,increase} internal
+
+# Change monitor brightness using backlight keys
+{XF86MonBrightnessDown,XF86MonBrightnessUp}
+	wmrc call screen/backlight {decrease,increase}
+
+# Change external monitor brightness using standard keys
+super + alt + {Prior, Next}
+	wmrc call screen/backlight {increase,decrease}
+
+# Set internal monitor brightess to low / high using media keys
+ctrl + {XF86AudioLowerVolume,XF86AudioRaiseVolume}
+	wmrc call screen/backlight set_to {0,100}
+
+# Select monitor layout
+super + {o, XF86AudioMicMute}
+	wmrc call screen/layout start
+
+# Select monitor layout using media key
+XF86Display
+	wmrc call screen/layout start
+
+# Launch Pulseaudio control interface
+super + XF86AudioMute
+	pavucontrol
+
+# Toggle mute microphone
+{super + shift + Insert, XF86AudioMicMute}
+	wmrc call hardware/audio microphone_toggle_mute
+
+# Playerctl previous track in playlist
+{super + @F10, XF86AudioPrev}
+	playerctl -a previous && \
+	wmrc call services/notifications notify -u low -i music-player 'Playing previous track'
+
+# Playerctl next track in playlist
+{super + @F11, XF86AudioNext}
+	playerctl -a next && \
+	wmrc call services/notifications notify -u low -i music-player 'Playing next track'
+
+# Playerctl toggle pause playback
+{super + @F12, XF86AudioPlay}
+	playerctl -a play-pause && \
+	wmrc call services/notifications notify -u low -i music-player 'Toggling media playback'
+
+## Appearance
+
+# Turn on gaps for current desktop
+super + bracketright
+	bspc config -d focused window_gap 15; \
+	bspc config -d focused border_width 2
+
+# Turn off gaps for current desktop
+super + bracketleft
+	bspc config -d focused window_gap 0; \
+	bspc config -d focused border_width 1

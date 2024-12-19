@@ -168,3 +168,13 @@ export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+
+# bun completions
+[ -s "/home/vinacio/.bun/_bun" ] && source "/home/vinacio/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# current desktop
+export XDG_CURRENT_DESKTOP=bspwm

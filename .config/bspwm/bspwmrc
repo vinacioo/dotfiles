@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export XDG_CURRENT_DESKTOP=bspwm
+
 pgrep -x sxhkd >/dev/null || sxhkd &
 
 # remapping caps lock
@@ -8,11 +10,10 @@ setxkbmap -option caps:escape &
 # Loading keymaps
 sxhkd &
 
-# flash window
+# Apps on boot
 /home/vinacio/.pyenv/versions/ds-env/bin/flashfocus &
-
-# screenshot
 flameshot &
+joplin-desktop &
 
 # Remove background croos pointer
 xsetroot -cursor_name left_ptr
@@ -89,6 +90,7 @@ configure_monitors() {
   # Refresh Polybar workspaces
   pkill polybar
   ~/.config/polybar/launch_polybar.sh &
+
 }
 
 # Run the monitor configuration function
@@ -98,6 +100,10 @@ configure_monitors
 picom &
 nm-applet &
 /home/vinacio/.pyenv/shims/flashfocus &
+
+# Start firefox on desktop 1 ony on boot
+firefox &
+sleep 1 && bspc desktop -f '^1'
 
 # Set wallpaper
 wallpaper="/home/vinacio/.config/bspwm/wallpapers/banksy-girl-background.jpg"
@@ -116,7 +122,7 @@ bspc config remove_disabled_monitors true
 bspc config remove_unplugged_monitors true
 
 # bspwm rules
-bspc rule -a thunderbird desktop='^9' follow=on
+bspc rule -a betterbird desktop='^9' follow=on
 bspc rule -a 'Alacritty:test' state=floating center=true rectangle=600x600+0+0
 bspc rule -a Spotify desktop='^10'
 bspc rule -a discord desktop='^8'
