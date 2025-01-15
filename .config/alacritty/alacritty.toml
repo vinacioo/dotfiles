@@ -1,0 +1,26 @@
+[font]
+size = 11.0
+
+[font.normal]
+family = "Inconsolata Nerd Font Mono"
+style = "Regular"
+
+[window]
+padding = { x = 10, y = 10 }
+
+# Default colors
+[colors.primary]
+background = '#101010'
+
+[terminal.shell]
+program = "/usr/bin/fish"
+
+[hints]
+
+[[hints.enabled]]
+command = "xdg-open"
+hyperlinks = true
+post_processing = true
+persist = false
+mouse = { mods = "Control", enabled = true }
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"

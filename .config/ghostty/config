@@ -1,0 +1,29 @@
+font-family = Inconsolata Nerd Font Mono
+font-size = 13
+
+cursor-style = block
+
+confirm-close-surface = false
+
+shell-integration = fish
+shell-integration-features = no-cursor,title
+
+# ---------------------------------------------------
+# --                     THEME                     --
+# ---------------------------------------------------
+
+theme = Afterglow
+background = #101010
+
+
+# ---------------------------------------------------
+# --                     WINDOW                    --
+# ---------------------------------------------------
+
+window-decoration = false
+window-padding-x = 13
+window-padding-y = 10
+
+
+mouse-hide-while-typing = true
+copy-on-select = true

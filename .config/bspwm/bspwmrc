@@ -1,0 +1,141 @@
+#!/bin/sh
+
+export XDG_CURRENT_DESKTOP=bspwm
+
+pgrep -x sxhkd >/dev/null || sxhkd &
+
+# remapping caps lock
+setxkbmap -option caps:escape &
+
+# Loading keymaps
+sxhkd &
+
+# Apps on boot
+/home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flashfocus &
+flameshot &
+# joplin-desktop &
+
+# Remove background croos pointer
+xsetroot -cursor_name left_ptr
+
+# Kill polybar process
+kill -9 $(pgrep -f 'polybar') >/dev/null 2>&1
+
+# Create autorandr profiles if they don't exist
+create_profiles() {
+  if ! autorandr | grep -q "hdmi-left"; then
+    echo "Creating hdmi-left profile..."
+    xrandr --output HDMI-1 --left-of eDP-1 --auto
+    autorandr --save hdmi-left
+  fi
+
+  if ! autorandr | grep -q "hdmi-right"; then
+    echo "Creating hdmi-right profile..."
+    xrandr --output HDMI-1 --right-of eDP-1 --auto
+    autorandr --save hdmi-right
+  fi
+
+  if ! autorandr | grep -q "only-edp"; then
+    echo "Creating only-edp profile..."
+    xrandr --output HDMI-1 --off --output eDP-1 --primary --auto
+    autorandr --save only-edp
+  fi
+}
+
+# Run the profile creation function
+create_profiles
+
+# Check if the system is booting by looking for a special flag file.
+if [ ! -f /tmp/bspwm_boot_done ]; then
+  # First time setup during boot (apply hdmi-left)
+  echo "Applying hdmi-left profile at boot..."
+  autorandr -l hdmi-left
+  touch /tmp/bspwm_boot_done # Create a file to mark the boot is done
+fi
+
+configure_monitors() {
+  # Automatically detect the current configuration with autorandr
+  current_profile=$(autorandr --current)
+
+  # Remove existing desktops to avoid conflicts
+  bspc desktop Desktop --remove
+
+  # Handle dual monitor setup based on detected profile
+  if [ "$current_profile" = "hdmi-left" ]; then
+    # HDMI-1 connected and positioned to the left of eDP-1
+    autorandr -c hdmi-left
+    bspc monitor eDP-1 -d I II III IV V
+    bspc monitor HDMI-1 -d VI VII VIII IX X
+
+  elif [ "$current_profile" = "hdmi-right" ]; then
+    # HDMI-1 connected and positioned to the right of eDP-1
+    autorandr -c hdmi-right
+    bspc monitor eDP-1 -d I II III IV V
+    bspc monitor HDMI-1 -d VI VII VIII IX X
+
+  elif [ "$current_profile" = "only-edp" ]; then
+    # Only eDP-1 is connected (laptop mode)
+    autorandr -c only-edp
+    bspc monitor eDP-1 -d I II III IV V VI VII VIII IX X
+
+  else
+    # Fallback: if no detected profiles
+    xrandr --output eDP-1 --primary --auto
+    bspc monitor eDP-1 -d I II III IV V
+    bspc monitor HDMI-1 -d VI VII VIII IX X
+
+    # bspc monitor eDP-1 -d I II III IV V VI VII VIII IX X
+  fi
+
+  # Refresh Polybar workspaces
+  pkill polybar
+  ~/.config/polybar/launch_polybar.sh &
+
+}
+
+# Run the monitor configuration function
+configure_monitors
+
+# Start other services
+picom &
+nm-applet &
+/home/vinacio/.pyenv/shims/flashfocus &
+
+# Start firefox on desktop 1 ony on boot
+firefox &
+sleep 1 && bspc desktop -f '^1'
+
+# Set wallpaper
+wallpaper="/home/vinacio/.config/bspwm/wallpapers/banksy-girl-background.jpg"
+feh --bg-fill "$wallpaper"
+
+# bspwm settings
+bspc config border_width 0
+bspc config window_gap 4
+bspc config focus_follows_pointer true
+bspc config border_radius 0
+bspc config split_ratio 0.52
+bspc config borderless_monocle true
+bspc config paddingless_monocle true
+bspc config gapless_monocle true
+bspc config remove_disabled_monitors true
+bspc config remove_unplugged_monitors true
+
+# bspwm rules
+bspc rule -a betterbird desktop='^9' follow=on
+bspc rule -a 'Alacritty:test' state=floating center=true rectangle=600x600+0+0
+bspc rule -a Spotify desktop='^10'
+bspc rule -a discord desktop='^8'
+bspc rule -a Blueman-manager state=floating center=true rectangle=400x600+0+0
+bspc rule -a pavucontrol state=floating center=true rectangle=700x600+0+0
+bspc rule -a file-roller state=floating center=true
+bspc rule -a URxvt state=floating focus=on
+bspc rule -a Toolkit state=floating
+bspc rule -a Gsimplecal state=floating center=true
+bspc rule -a gimp-operation-tool state=floating rectangle=500x500+0+0
+bspc config external_rules_command ~/.config/bspwm/scripts/external_rules.sh
+bspc rule -a '*:*:Picture-in-Picture' state=floating center=true rectangle=840x473+0+0
+bspc rule -a scratchpad-term sticky=on state=floating rectangle=800x600+0+0 center=true
+bspc rule -a scratchpad-btop sticky=on state=floating rectangle=1200x900+0+0 center=true
+bspc rule -a scratchpad-pkg sticky=on state=floating rectangle=500x732+1415+315
+bspc rule -a sxhkdrc-scratchpad sticky=on state=floating rectangle=800x600+0+0 center=true
