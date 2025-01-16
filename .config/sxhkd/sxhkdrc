@@ -1,0 +1,228 @@
+# -------------------------------------------------
+# ----------       General Config        ----------
+# -------------------------------------------------
+
+# Reload Sxhkd
+super + End
+    pkill -USR1 -x sxhkd; dunstify "Sxhkd configuration reloaded" --icon /usr/share/icons/dunst/system/sxhkd.svg
+
+# Reload Bspwm
+super + Home
+	~/.config/bspwm/bspwmrc; dunstify "bspwmrc confguration reloaded" --icon /home/vinacio/.config/dunst/icons/bspwm.svg
+
+# Set Keyboard layout en/ptbr
+alt + space
+  sh ~/.config/bspwm/scripts/toggle_layout.sh
+
+# -------------------------------------------------
+# ----------          Launchers          ----------
+# -------------------------------------------------
+
+# Poweroff Menu
+super + shift + p
+  sh ~/.config/rofi/powermenu/type-2/powermenu.sh
+
+# Aplications
+alt + F2
+  sh /home/vinacio/.config/rofi/launchers/type-2/launcher.sh
+
+# -------------------------------------------------
+# ----------        Applications         ----------
+# -------------------------------------------------
+
+# Spotify
+super + shift + s
+  spotify
+
+# PCManFM
+super + d
+  pcmanfm
+
+# Firefox
+super + b
+  firefox &
+
+# Joplin
+super  + j
+  joplin-desktop &
+
+# Betterbird
+super + e
+  betterbird
+
+# Ghostty Terminal
+super + Return
+  ghostty -e tmux -u
+
+# Neovim
+super + v
+  ghostty -e tmux -u new-session \\; new-window nvim
+
+# Slock
+super + x
+	slock
+
+# Ranger
+super + r
+	ghostty -e ranger
+
+# Flameshot
+Print
+	flameshot gui
+
+# -------------------------------------------------
+# ----------      Restart and Close      ----------
+# -------------------------------------------------
+
+# Logout Bspwm
+super + alt + Escape
+  bspc quit
+
+# Quit/Restart Bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r}
+
+# Close and Kill
+super + {_,shift + }q
+	bspc node -{c,k}
+
+# -------------------------------------------------
+# ----------     Window Manipulation     ----------
+# -------------------------------------------------
+
+# Switch to last node / desktop
+super + Tab
+    bspc {node,desktop} --focus last
+
+# Window focus and swap Vim way
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+# Window focus and swap with arrows
+super + {_, + }{Left,Down,Up,Right}
+	bspc node -{f,s} {west,south,north,east}
+
+# Focus the next/previous desktop in the current monitor
+super + bracket{left,right}
+	bspc desktop -f {prev,next}.local
+
+# Focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+# Moving floating window
+super + ctrl + {Up,Down,Left,Right}
+  bash -c 'if [ "$(bspc query -N -n focused.floating)" ]; then \
+    case "$1" in \
+      Up) bspc node -v 0 -10 ;; \
+      Down) bspc node -v 0 10 ;; \
+      Left) bspc node -v -10 0 ;; \
+      Right) bspc node -v 10 0 ;; \
+    esac \
+  fi' _ {Up,Down,Left,Right}
+
+# Set window state
+super + {s,f}
+  bspc node -t {\~floating,\~fullscreen}
+
+# Moving window to next monitor and focus on it
+super + shift + {Left,Right}
+  bspc node -m next && bspc monitor -f next && bspc node -f $(bspc query -N -n newest) && xdotool mousemove --window $(bspc query -N -n newest) 0 0
+
+# Resize windows
+super + shift + alt + {h,j,k,l}
+    ~/.config/bspwm/scripts/bspwm_resize.sh {west,south,north,east} 10
+
+# -------------------------------------------------
+# ----------        Media Control        ----------
+# -------------------------------------------------
+
+# use "pactl list sinks short" para descobrir o output
+XF86AudioRaiseVolume
+	pactl set-sink-volume @DEFAULT_SINK@ +5%
+
+XF86AudioLowerVolume
+	pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+XF86AudioMute
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Spotify play/pause
+control + F11
+    dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+
+# Spotify next
+control + F12
+    dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+
+# Spotify previous
+control + F10
+    dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+
+# -------------------------------------------------
+# ----------       Custom Scripts        ----------
+# -------------------------------------------------
+
+# Toggle polybar
+super + p
+  sh ~/.config/polybar/scripts/toggle-polybar.sh
+
+# Translate from selection
+super + t
+  sh ~/.config/bspwm/scripts/translation.sh
+
+# Translate from clipboard
+super + shift + t
+  sh ~/.config/bspwm/scripts/translation-clipboard.sh
+
+# Speak selection
+super + shift + v
+  sh ~/.config/bspwm/scripts/text-to-speech.sh
+
+# Swap monitors
+super + space
+  sh ~/.config/bspwm/scripts/swap-workspaces.sh
+
+# set the node flags
+super + ctrl + {m,x,y,z}
+  bspc node -g {marked,locked,sticky,private}
+
+# -------------------------------------------------
+# ----------    Monitors Maniputation    ----------
+# -------------------------------------------------
+
+# Set monitor layout to HDMI-Right
+super + F8
+    xrandr --output HDMI-1 --right-of eDP-1 --auto && autorandr -l hdmi-right && bspc wm -r
+
+# Set monitor layout to HDMI-Left
+super + F6
+    xrandr --output HDMI-1 --left-of eDP-1 --auto && autorandr -l hdmi-left && bspc wm -r
+
+# No HDMI connected (Set to only eDP)
+super + F7
+    xrandr --output eDP-1 --primary --auto --output HDMI-1 --off && autorandr -l only-edp && bspc wm -r
+
+# Swap monitors
+super + ctrl + s
+    bash ~/.config/bspwm/scripts/swap-workspaces.sh
+
+# -------------------------------------------------
+# ----------         Miscelanious        ----------
+# -------------------------------------------------
+
+# Flash window
+super + a
+  /home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flash_window
+
+# Terminal Scratchpad
+ctrl + 1
+    sh ~/.config/bspwm/scripts/scratchpad-term.sh
+
+# Btop Scratchpad
+ctrl + 2
+  ~/.config/bspwm/scripts/scratchpad-btop
+
+# Show Cheatsheets
+super + F1
+  ~/.config/sxhkd/rofi-cheatsheet.sh

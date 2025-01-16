@@ -13,7 +13,6 @@ sxhkd &
 # Apps on boot
 /home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flashfocus &
 flameshot &
-# joplin-desktop &
 
 # Remove background croos pointer
 xsetroot -cursor_name left_ptr
@@ -101,10 +100,6 @@ picom &
 nm-applet &
 /home/vinacio/.pyenv/shims/flashfocus &
 
-# Start firefox on desktop 1 ony on boot
-firefox &
-sleep 1 && bspc desktop -f '^1'
-
 # Set wallpaper
 wallpaper="/home/vinacio/.config/bspwm/wallpapers/banksy-girl-background.jpg"
 feh --bg-fill "$wallpaper"
@@ -122,7 +117,12 @@ bspc config remove_disabled_monitors true
 bspc config remove_unplugged_monitors true
 
 # bspwm rules
-bspc rule -a betterbird desktop='^9' follow=on
+bspc config ignore_ewmh_focus true
+bspc rule -a "firefox" desktop='^1' follow=on focus=on
+bspc rule -a "Zotero" desktop='^9'
+bspc rule -a "eu.betterbird.Betterbird" desktop='^10' follow=on focus=on
+bspc rule -a "Logseq" desktop='^2'
+# bspwm rule for Zotero
 bspc rule -a 'Alacritty:test' state=floating center=true rectangle=600x600+0+0
 bspc rule -a Spotify desktop='^10'
 bspc rule -a discord desktop='^8'
@@ -139,3 +139,12 @@ bspc rule -a scratchpad-term sticky=on state=floating rectangle=800x600+0+0 cent
 bspc rule -a scratchpad-btop sticky=on state=floating rectangle=1200x900+0+0 center=true
 bspc rule -a scratchpad-pkg sticky=on state=floating rectangle=500x732+1415+315
 bspc rule -a sxhkdrc-scratchpad sticky=on state=floating rectangle=800x600+0+0 center=true
+
+# Adjust focus on monitors
+bspc monitor HDMI-1 -f ^1
+bspc monitor eDP-1 -f ^10
+
+sleep 1 && firefox &
+sleep 1 && zotero &
+sleep 1 && betterbird &
+sleep 1 && logseq
