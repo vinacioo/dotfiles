@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-if [ -f /tmp/polybarhidden ]; then
+POLYBAR_HIDDEN="/tmp/polybarhidden"
+PADDING=28 # Adjust this to match your Polybar height
+
+if [ -f "$POLYBAR_HIDDEN" ]; then
   polybar-msg cmd show
-  bspc config top_padding 0
-  rm /tmp/polybarhidden
+  bspc config top_padding "$PADDING" # Restore top padding
+  rm "$POLYBAR_HIDDEN"
 else
   polybar-msg cmd hide
-  bspc config top_padding 0
-  touch /tmp/polybarhidden
+  bspc config top_padding 0 # Remove padding when Polybar is hidden
+  touch "$POLYBAR_HIDDEN"
 fi

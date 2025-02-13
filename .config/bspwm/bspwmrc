@@ -1,20 +1,18 @@
 #!/bin/sh
 
-export XDG_CURRENT_DESKTOP=bspwm
+export SXHKD_SHELL="/bin/sh"
+# export XDG_CURRENT_DESKTOP=bspwm
 
 pgrep -x sxhkd >/dev/null || sxhkd &
 
 # remapping caps lock
 setxkbmap -option caps:escape &
 
-# Loading keymaps
-sxhkd &
-
 # Apps on boot
 /home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flashfocus &
 flameshot &
 
-# Remove background croos pointer
+# Remove background cross pointer
 xsetroot -cursor_name left_ptr
 
 # Kill polybar process
@@ -53,43 +51,48 @@ if [ ! -f /tmp/bspwm_boot_done ]; then
 fi
 
 configure_monitors() {
-  # Automatically detect the current configuration with autorandr
-  current_profile=$(autorandr --current)
+  # Detect HDMI monitor model using hwinfo
+  MODELS=$(hwinfo --monitor | grep "Model:" | awk -F'"' '{print $2}')
+  HDMI_DISPLAY=$(xrandr | grep " connected" | grep "HDMI" | awk '{print $1}')
 
-  # Remove existing desktops to avoid conflicts
-  bspc desktop Desktop --remove
+  if echo "$MODELS" | grep -q "LG ELECTRONICS 23MP55"; then
+    echo "Detected HDMI monitor: LG ELECTRONICS 23MP55. Applying hdmi-left profile..."
+    autorandr -l hdmi-left
 
-  # Handle dual monitor setup based on detected profile
-  if [ "$current_profile" = "hdmi-left" ]; then
-    # HDMI-1 connected and positioned to the left of eDP-1
-    autorandr -c hdmi-left
+    # Assign workspaces for HDMI-LEFT
     bspc monitor eDP-1 -d I II III IV V
     bspc monitor HDMI-1 -d VI VII VIII IX X
+    bspc monitor HDMI-1 -f ^1
+    bspc monitor eDP-1 -f ^10
 
-  elif [ "$current_profile" = "hdmi-right" ]; then
-    # HDMI-1 connected and positioned to the right of eDP-1
-    autorandr -c hdmi-right
+  elif [ -n "$HDMI_DISPLAY" ]; then
+    echo "Detected HDMI monitor: $HDMI_DISPLAY. Applying hdmi-right profile..."
+    autorandr -l hdmi-right
+
+    # Assign workspaces for HDMI-RIGHT
     bspc monitor eDP-1 -d I II III IV V
     bspc monitor HDMI-1 -d VI VII VIII IX X
-
-  elif [ "$current_profile" = "only-edp" ]; then
-    # Only eDP-1 is connected (laptop mode)
-    autorandr -c only-edp
-    bspc monitor eDP-1 -d I II III IV V VI VII VIII IX X
+    bspc monitor HDMI-1 -f ^1
+    bspc monitor eDP-1 -f ^10
 
   else
-    # Fallback: if no detected profiles
-    xrandr --output eDP-1 --primary --auto
-    bspc monitor eDP-1 -d I II III IV V
-    bspc monitor HDMI-1 -d VI VII VIII IX X
+    echo "No HDMI monitor detected. Applying only-edp profile..."
+    autorandr -l only-edp
 
-    # bspc monitor eDP-1 -d I II III IV V VI VII VIII IX X
+    # Assign all workspaces to eDP-1
+    bspc monitor eDP-1 -d I II III IV V VI VII VIII IX X
   fi
 
-  # Refresh Polybar workspaces
+  # Remove incorrect "Desktop" workspace on HDMI-1
+  if bspc query -M --names | grep -q "HDMI-1"; then
+    if bspc query -D -m HDMI-1 | grep -q "Desktop"; then
+      bspc desktop Desktop --remove
+    fi
+  fi
+
+  # Restart Polybar to update workspaces
   pkill polybar
   ~/.config/polybar/launch_polybar.sh &
-
 }
 
 # Run the monitor configuration function
@@ -101,7 +104,7 @@ nm-applet &
 /home/vinacio/.pyenv/shims/flashfocus &
 
 # Set wallpaper
-wallpaper="/home/vinacio/.config/bspwm/wallpapers/blue-herbie.png"
+wallpaper="/home/vinacio/.config/bspwm/wallpapers/simple.png"
 feh --bg-fill "$wallpaper"
 
 # bspwm settings
@@ -121,12 +124,57 @@ bspc config remove_unplugged_monitors true
 # To ignore the default focus when opening window
 bspc config ignore_ewmh_focus true
 
-bspc rule -a "firefox" desktop='^1' follow=on focus=on
-bspc rule -a "Logseq" desktop='^2'
-bspc rule -a discord desktop='^7'
-bspc rule -a Spotify desktop='^8'
-bspc rule -a "Zotero" desktop='^9'
-bspc rule -a "eu.betterbird.Betterbird" desktop='^10' follow=on focus=on
+# Detect HDMI presence dynamically
+HDMI_DISPLAY=$(xrandr | grep " connected" | grep "HDMI" | awk '{print $1}')
+
+# Detect LG monitor using hwinfo
+LG_MONITOR=$(hwinfo --monitor | grep "Model:" | grep "LG ELECTRONICS 23MP55")
+
+if [ -n "$LG_MONITOR" ]; then
+  echo "LG ELECTRONICS 23MP55 detected. Applying hdmi-left rules."
+  bspc rule -a "firefox" --one-shot desktop='^1' follow=on focus=on
+  bspc rule -a "Logseq" --one-shot desktop='^2'
+  bspc rule -a discord desktop='^7'
+  bspc rule -a Spotify desktop='^8'
+  bspc rule -a "Zotero" --one-shot desktop='^9'
+  bspc rule -a "eu.betterbird.Betterbird" desktop='^10' follow=on focus=on
+
+  # setting us keyboard layout
+  setxkbmap -model abnt -layout us -variant intl
+
+elif [ -n "$HDMI_DISPLAY" ]; then
+  echo "HDMI detected. Applying hdmi-right rules."
+  bspc rule -a "firefox" --one-shot desktop='^10' follow=on focus=on
+  bspc rule -a "Logseq" --one-shot desktop='^9'
+  bspc rule -a discord desktop='^3'
+  bspc rule -a Spotify desktop='^4'
+  bspc rule -a "Zotero" --one-shot desktop='^2'
+  bspc rule -a "eu.betterbird.Betterbird" desktop='^1' follow=on focus=on
+
+  # setting br keyboard layout
+  setxkbmap -model abnt2 -layout br -variant abnt2
+
+else
+  echo "No HDMI detected. Applying only-edp rules."
+  bspc rule -a "firefox" --one-shot desktop='^1' follow=on focus=on
+  bspc rule -a "Logseq" --one-shot desktop='^2'
+  bspc rule -a discord desktop='^7'
+  bspc rule -a Spotify desktop='^8'
+  bspc rule -a "Zotero" --one-shot desktop='^9'
+  bspc rule -a "eu.betterbird.Betterbird" desktop='^10' follow=on focus=on
+
+  # setting br keyboard layout
+  setxkbmap -model abnt2 -layout br -variant abnt2
+fi
+
+# bspc rule -a "firefox" --one-shot desktop='^1' follow=on focus=on
+# bspc rule -a "Logseq" --one-shot desktop='^2'
+# bspc rule -a discord desktop='^7'
+# bspc rule -a Spotify desktop='^8'
+# bspc rule -a "Zotero" --one-shot desktop='^9'
+# # external rule to make zotero dialog appear above all to confirm
+# # bspc config external_rules_command ~/.config/bspwm/scripts/external_rules.sh
+# bspc rule -a "eu.betterbird.Betterbird" desktop='^10' follow=on focus=on
 bspc rule -a 'Alacritty:test' state=floating center=true rectangle=600x600+0+0
 bspc rule -a Blueman-manager state=floating center=true rectangle=400x600+0+0
 bspc rule -a pavucontrol state=floating center=true rectangle=700x600+0+0
@@ -135,18 +183,25 @@ bspc rule -a URxvt state=floating focus=on
 bspc rule -a Toolkit state=floating
 bspc rule -a Gsimplecal state=floating center=true
 bspc rule -a gimp-operation-tool state=floating rectangle=500x500+0+0
-bspc config external_rules_command ~/.config/bspwm/scripts/external_rules.sh
 bspc rule -a '*:*:Picture-in-Picture' state=floating center=true rectangle=840x473+0+0
 bspc rule -a scratchpad-term sticky=on state=floating rectangle=800x600+0+0 center=true
 bspc rule -a scratchpad-btop sticky=on state=floating rectangle=1200x900+0+0 center=true
 bspc rule -a scratchpad-pkg sticky=on state=floating rectangle=500x732+1415+315
 bspc rule -a sxhkdrc-scratchpad sticky=on state=floating rectangle=800x600+0+0 center=true
 
-# Adjust focus on monitors
-bspc monitor HDMI-1 -f ^1
-bspc monitor eDP-1 -f ^10
+# Check if the system is booting by looking for a special flag file
+# If is boot then louchs those programs, if not don't do anything
+if [ ! -f /tmp/bspwm_boot_done_apps ]; then
+  # echo "Fresh boot detected, launching apps..."
 
-sleep 1 && firefox &
-sleep 1 && zotero &
-sleep 1 && betterbird &
-sleep 1 && logseq
+  # Start apps only on fresh boot
+  sleep 1 && firefox &
+  sleep 1 && zotero &
+  sleep 1 && betterbird &
+  sleep 1 && logseq &
+
+  # Create the flag file to mark the boot as done
+  touch /tmp/bspwm_boot_done_apps
+fi
+
+/home/vinacio/.ssh/autossh_jupyter.sh &

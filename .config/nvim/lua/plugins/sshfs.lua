@@ -13,10 +13,11 @@ return {
       {
         "<Leader>rc",
         function()
-          require("remote-sshfs.api").connect()
+          vim.api.nvim_feedkeys(":RemoteSSHFSConnect ", "n", false)
         end,
-        desc = "Remote SSH Connect",
+        desc = "Prompt for RemoteSSHFSConnect command",
         noremap = true,
+        silent = true,
       },
       {
         "<Leader>rd",
@@ -34,10 +35,17 @@ return {
             vim.fn.expand("~") .. "/.ssh/config",
           },
         },
+        ui = {
+          select_prompts = false,
+          confirm = {
+            connect = false,
+            change_dir = false,
+          },
+        },
         log = {
-          enable = true, -- enable logging
-          truncate = true, -- truncate logs
-          types = { -- enabled log types
+          enable = true,
+          truncate = true,
+          types = {
             all = true,
             util = true,
             handler = true,

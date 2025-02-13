@@ -10,7 +10,7 @@ right_format = """$python$status$all"""
 [character]
 success_symbol = "[](red)[](yellow)[](green)"
 error_symbol = "[](red)[](yellow)[](green)"
-vicmd_symbol = "[](green)[](yellow)[](red)"
+# vicmd_symbol = "[](green)[](yellow)[](red)"
 
 [git_branch]
 format = '[$branch]($style) '
@@ -19,21 +19,35 @@ style = 'bold green'
 [python]
 style = "#3C3836 bg:none"
 format = '[(\($virtualenv\) )]($style)'
+pyenv_prefix = 'pyenv'
 pyenv_version_name = true
 
 [git_status]
-format = '$all_status$ahead_behind '
-ahead = '[⬆](bold purple) '
-behind = '[⬇](bold purple) '
-staged = '[✚](green) '
-deleted = '[✖](red) '
-renamed = '[➜](purple) '
-stashed = '[✭](cyan) '
-untracked = '[◼](white) '
-modified = '[✱](blue) '
-conflicted = '[═](yellow) '
-diverged = '⇕ '
-up_to_date = ''
+conflicted = ""
+deleted = "󰗨"
+modified = ""
+stashed = ""
+staged = ""
+renamed = ""
+untracked = ""
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
+ignore_submodules = true
+
+# [git_status]
+# format = '$all_status$ahead_behind '
+# ahead = '[⬆](bold purple) '
+# behind = '[⬇](bold purple) '
+# staged = '[✚](green) '
+# deleted = '[✖](red) '
+# renamed = '[➜](purple) '
+# stashed = '[✭](cyan) '
+# untracked = '[◼](white) '
+# modified = '[✱](blue) '
+# conflicted = '[═](yellow) '
+# diverged = '⇕ '
+# up_to_date = ''
 
 [directory]
 style = "blue"

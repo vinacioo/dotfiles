@@ -8,11 +8,12 @@ super + End
 
 # Reload Bspwm
 super + Home
-	~/.config/bspwm/bspwmrc; dunstify "bspwmrc confguration reloaded" --icon /home/vinacio/.config/dunst/icons/bspwm.svg
+	bspc wm -r && dunstify "BSPWM reloaded" --icon /home/vinacio/.config/dunst/icons/bspwm.svg
+
 
 # Set Keyboard layout en/ptbr
 alt + space
-  sh ~/.config/bspwm/scripts/toggle_layout.sh
+  sh ~/.config/bspwm/scripts/toggle_layout.sh &
 
 # -------------------------------------------------
 # ----------          Launchers          ----------
@@ -20,11 +21,11 @@ alt + space
 
 # Poweroff Menu
 super + shift + p
-  sh ~/.config/rofi/powermenu/type-2/powermenu.sh
+  sh ~/.config/rofi/powermenu/type-2/powermenu.sh &
 
-# Aplications
+# Apps
 alt + F2
-  sh /home/vinacio/.config/rofi/launchers/type-2/launcher.sh
+  sh ~/.config/rofi/launchers/type-2/launcher.sh &
 
 # -------------------------------------------------
 # ----------        Applications         ----------
@@ -32,11 +33,11 @@ alt + F2
 
 # Spotify
 super + shift + s
-  spotify
+  spotify &
 
 # PCManFM
 super + d
-  pcmanfm
+  pcmanfm &
 
 # Firefox
 super + b
@@ -48,15 +49,16 @@ super  + j
 
 # Betterbird
 super + e
-  betterbird
+  betterbird &
 
 # Ghostty Terminal
 super + Return
   ghostty -e tmux -u
 
 # Neovim
-super + v
-  ghostty -e tmux -u new-session \\; new-window nvim
+super + n
+  ghostty -e "tmux -u new-session 'nvim'"
+
 
 # Slock
 super + x
@@ -165,23 +167,28 @@ control + F10
 
 # Toggle polybar
 super + p
-  sh ~/.config/polybar/scripts/toggle-polybar.sh
+  sh ~/.config/polybar/scripts/toggle-polybar.sh &
 
 # Translate from selection
 super + t
-  sh ~/.config/bspwm/scripts/translation.sh
+  sh ~/.config/bspwm/scripts/translation.sh &
 
 # Translate from clipboard
 super + shift + t
-  sh ~/.config/bspwm/scripts/translation-clipboard.sh
+  sh ~/.config/bspwm/scripts/translation-clipboard.sh &
 
-# Speak selection
+# Speak from selection
+super + v
+  sh ~/.config/bspwm/scripts/tts.sh &
+
+
+# Speak from clipboard
 super + shift + v
-  sh ~/.config/bspwm/scripts/text-to-speech.sh
+  sh ~/.config/bspwm/scripts/tts_clipboard.sh &
 
 # Swap monitors
 super + space
-  sh ~/.config/bspwm/scripts/swap-workspaces.sh
+  sh ~/.config/bspwm/scripts/swap-workspaces.sh &
 
 # set the node flags
 super + ctrl + {m,x,y,z}
@@ -205,7 +212,7 @@ super + F7
 
 # Swap monitors
 super + ctrl + s
-    bash ~/.config/bspwm/scripts/swap-workspaces.sh
+    bash ~/.config/bspwm/scripts/swap-workspaces.sh &
 
 # -------------------------------------------------
 # ----------         Miscelanious        ----------
@@ -213,16 +220,16 @@ super + ctrl + s
 
 # Flash window
 super + a
-  /home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flash_window
+  /home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flash_window &
 
 # Terminal Scratchpad
 ctrl + 1
-    sh ~/.config/bspwm/scripts/scratchpad-term.sh
+    sh ~/.config/bspwm/scripts/scratchpad-term.sh &
 
 # Btop Scratchpad
 ctrl + 2
-  ~/.config/bspwm/scripts/scratchpad-btop
+  ~/.config/bspwm/scripts/scratchpad-btop &
 
 # Show Cheatsheets
 super + F1
-  ~/.config/sxhkd/rofi-cheatsheet.sh
+  ~/.config/sxhkd/rofi-cheatsheet.sh &

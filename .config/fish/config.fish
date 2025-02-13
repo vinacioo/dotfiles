@@ -94,58 +94,24 @@ set -g fish_pager_color_prefix $cyan
 set -g fish_pager_color_completion $foreground
 set -g fish_pager_color_description $comment
 
-# Fish syntax highlighting
-#set -g fish_color_autosuggestion 555 brblack
-#set -g fish_color_cancel -r
-#set -g fish_color_command --bold
-#set -g fish_color_comment red
-#set -g fish_color_cwd green
-#set -g fish_color_cwd_root red
-#set -g fish_color_end brmagenta
-#set -g fish_color_error brred
-#set -g fish_color_escape bryellow --bold
-#set -g fish_color_history_current --bold
-#set -g fish_color_host normal
-#set -g fish_color_match --background=brblue
-#set -g fish_color_normal normal
-#set -g fish_color_operator bryellow
-#set -g fish_color_param cyan
-#set -g fish_color_quote yellow
-#set -g fish_color_redirection brblue
-#set -g fish_color_search_match bryellow '--background=brblack'
-#set -g fish_color_selection white --bold '--background=brblack'
-#set -g fish_color_user brgreen
-#set -g fish_color_valid_path --underline
-
-
 # Pyenv setup
-pyenv init - | source
+# Set up pyenv and pyenv-virtualenv
+set -x PYENV_ROOT "$HOME/.pyenv"
+set -x PATH "$PYENV_ROOT/bin" $PATH
 
+# Initialize pyenv without rehashing for faster startup
+eval (pyenv init - --no-rehash | source)
+eval (pyenv virtualenv-init - | source)
+##set -Ux PYENV_ROOT $HOME/.pyenv
+#fish_add_path $PYENV_ROOT/bin
+#
+## pyenv
+#if type -q pyenv
+#    set -Ux PYENV_ROOT $HOME/.pyenv
+#    set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+#    status --is-interactive; and pyenv init --path | source
+#    status --is-interactive; and pyenv init - | source
+#    status --is-interactive; and pyenv virtualenv-init - | source
+#end
 # starship
 starship init fish | source
-
-
-######### BKP
-#if status is-interactive
-#    # remove welcome message
-#    set -g fish_greeting
-#
-#    # set TERM
-#    set -g TERM ghostty
-#
-#    pyenv init - fish | source
-#
-#    starship init fish | source
-#end
-#
-## Enable vi mode
-#fish_vi_key_bindings
-#
-## Accept autosuggestions with ctrl-space
-#bind -k nul -M insert accept-autosuggestion
-#bind -k nul -M normal accept-autosuggestion
-#
-## Disable pyenv prompt to leave junt in starship right side
-#set -x VIRTUAL_ENV_DISABLE_PROMPT 1
-#
-#source ~/.config/fish/alias.fish
