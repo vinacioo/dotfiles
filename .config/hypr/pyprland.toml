@@ -1,0 +1,30 @@
+[pyprland]
+plugins = ["layout_center", "scratchpads"]
+
+[layout_center]
+margin = 50
+offset = [0, 0]
+next = "movefocus r"
+prev = "movefocus l"
+next2 = "movefocus d"
+prev2 = "movefocus u"
+style = ["opacity 1", "bordercolor rgb(FFFF00)"]
+captive_focus = false
+
+[scratchpads.volume]
+animation = "fromRight"
+command = "pavucontrol"
+class = "org.pulseaudio.pavucontrol"
+size = "40% 90%"
+unfocus = "hide"
+lazy = true
+
+[scratchpads.term]
+animation = "fromTop"
+lazy = true
+class = "Alacritty"
+# command = "ghostty"
+command = "sh -lc 'alacritty -e tmux new-session -A -s scratchpad'"
+size = "75% 60%"
+max_size = "1920px 100%"
+margin = 50

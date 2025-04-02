@@ -1,0 +1,436 @@
+/*   _ _ _ _____ __ __ _____ _____ _____ 
+    | | | |  _  |  |  | __  |  _  | __  |
+    | | | |     |_   _| __ -|     |    -|
+    |_____|__|__| |_| |_____|__|__|__|__|  STYLE
+  
+    Kanagawa Dragon Edition
+*/
+
+/* Kanagawa Dragon Color Variables */
+@define-color bg #181616;
+@define-color fg #c5c9c5;
+@define-color black_normal #0d0c0c;
+@define-color black_bright #a6a69c;
+@define-color red_normal #c4746e;
+@define-color red_bright #e46876;
+@define-color green_normal #8a9a7b;
+@define-color green_bright #87a987;
+@define-color yellow_normal #c4b28a;
+@define-color yellow_bright #e6c384;
+@define-color blue_normal #8ba4b0;
+@define-color blue_bright #7fb4ca;
+@define-color magenta_normal #a292a3;
+@define-color magenta_bright #938aa9;
+@define-color cyan_normal #8ea4a2;
+@define-color cyan_bright #7aa89f;
+@define-color white_normal #c8c093;
+@define-color white_bright #c5c9c5;
+@define-color selection_bg #2d4f67;
+@define-color selection_fg #c8c093;
+@define-color indexed_16 #b6927b;
+@define-color indexed_17 #b98d7b;
+
+/* Additional Semantic Colors */
+@define-color accent @blue_bright;
+@define-color warning @yellow_bright;
+@define-color critical @red_bright;
+@define-color success @green_bright;
+@define-color bg_alt #454545;
+@define-color bg_alt_bright #606060;
+@define-color bg_transparent rgba(0, 0, 0, 0.0);
+@define-color hover_bg rgba(46, 79, 103, 0.3);
+
+/* general */
+* {
+    font-family: "JetBrainsMono Nerd Font", 'Symbols Only';
+    border: none;
+    min-height: 0px;
+    border-radius: 5px;
+}
+
+.edp *, .hdmi *, .hdmia1 * {
+    font-family: "JetBrainsMono Nerd Font", 'Symbols Only'; 
+    border: none; 
+    padding: 1px 3px 1px 3px;
+    border-radius: 3px; 
+}
+
+window#waybar {
+    background-color: @bg;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window.edp#waybar, window.hdmi#waybar, window.hdmi1#waybar {
+    background-color: @bg;
+    transition-property: background-color;
+    font-size: 14px;
+    transition-duration: .5s;
+}
+
+/* workspaces */
+#workspaces {
+    border-radius: 5px;
+    border: 0px;
+    font-weight: normal;
+    font-style: normal;
+    opacity: 0.9;
+}
+
+#workspaces button {
+    padding: 0px 5px;
+    color: @yellow_bright;
+    opacity: 0.6;
+    transition: all 0.3s ease-in-out;
+}
+
+/* empty persistent workspaces */
+#workspaces button.empty {
+    color: @cyan_normal;
+    opacity: 0.3;
+}
+
+/* active or visible workspaces */
+#workspaces button.active,
+#workspaces button.visible {
+    color: @yellow_bright;
+    background: @bg_alt;
+    transition: all 0.3s ease-in-out;
+    opacity: 1.0;
+    border-radius: 6px;
+    box-shadow: inset 0px 0px 0px 2px #282828;
+}
+
+#workspaces button.urgent {
+    color: @red_normal;
+}
+
+/* Support for both .active and .focused since configs may vary */
+#workspaces button.active, 
+#workspaces button.focused {
+    color: @yellow_bright;
+    background: @bg_alt;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    opacity: 1.0;
+}
+
+#workspaces button.urgent {
+    background-color: transparent;
+    color: @warning;
+}
+
+#workspaces button:hover {
+    color: @yellow_bright;
+    background: @bg_alt;
+    opacity: 0.9;
+    border-radius: 6px;
+    border: none;
+    box-shadow: inset 0px 0px 0px 2px #282828;
+}
+
+/* taskbar */
+#taskbar {
+    padding: 0px;
+}
+
+#taskbar button.active {
+    background: rgba(255, 255, 255, 0.04);
+    color: @white_bright;
+    padding-left: 7px;
+    padding-right: 7px;
+    animation: tb_active 20s ease-in-out 1;
+    transition: all 0.4s cubic-bezier(.55,-0.68,.48,1.682);
+    min-height: 9px; 
+}
+
+#taskbar button {
+    border-radius: 5px;
+}
+
+#taskbar button:hover {
+    background: @hover_bg;
+    opacity: 1;
+    border: none;
+    box-shadow: none;
+}
+
+/* tooltip */
+tooltip {
+    background: @bg;
+    color: @blue_normal;
+    border-radius: 7px;
+    border: 2px solid @selection_bg;
+}
+
+tooltip label {
+    border-radius: 5px;
+    background-color: @bg;
+    opacity: 0.8;
+    font-size: 12px;
+    color: @fg;
+}
+
+/* modules */
+.modules-left > widget:first-child > #workspaces {
+    /* Optional margin adjustments */
+}
+
+.modules-right > widget:last-child > #workspaces {
+    /* Optional margin adjustments */
+}
+
+/* clock */
+#clock {
+    color: @blue_bright;
+    font-size: 14;
+    font-family: "JetBrainsMono Nerd Font";
+    background: @bg_transparent;
+    opacity: 1;
+    border: none;
+}
+
+/* hardware group */
+#cpu, #temperature, #disk, #memory {
+    padding: 0px;
+    color: @fg;
+}
+
+/* audio */
+#pulseaudio {
+    background-color: transparent;
+    color: @white_normal;
+    border-radius: 4px;
+    padding: 1px 0px 0px 0px;
+    opacity: 0.9;
+}
+
+#custom-pulseaudio-icon {
+    color: @blue_normal;
+    padding: 0px 0px 0px 20px;
+    background: rgba(30, 30, 30, 0.2);
+    border-radius: 6px;
+}
+
+#custom-power {
+    color: @white_bright;
+    background: rgba(22, 19, 32, 0.9);
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/* network */
+#network {
+    background-color: @bg_alt;
+    color: @fg;
+    border-radius: 5px;
+    padding: 1px 10px 0px 10px;
+    opacity: 0.9;
+}
+
+#network.ethernet {
+    background-color: @bg_alt;
+    color: @fg;
+}
+
+#network.wifi {
+    background-color: @bg_alt;
+    color: @fg;
+}
+
+/* bluetooth */
+#bluetooth, #bluetooth.on, #bluetooth.connected, #bluetooth.off {
+    background-color: @bg_alt;
+    color: @fg;
+    border-radius: 5px;
+    padding: 1px 10px 0px 10px;
+    opacity: 0.9;
+}
+
+/* keyboard-layout */
+#custom-keyboard_layout {
+    color: @white_normal;
+    opacity: 1;
+}
+
+#upower {
+    font-size: 13px;
+    color: @green_bright;
+    margin: -10px;
+    background-color: transparent;
+    opacity: 1;
+}
+
+/* battery */
+#battery {
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+    transition: none;
+    color: @white_bright;
+    background: #404040;
+}
+
+/* 🔋 Discharging (default state) */
+#battery.discharging {
+    color: @yellow_bright;
+}
+
+#battery.charging, #battery.plugged {
+    color: @green_bright;
+    background-color: @bg_alt;
+}
+
+@keyframes blink {
+    to {
+        background-color: @bg_alt;
+        color: @fg;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background-color: @red_bright;
+    color: @fg;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* 🔌 Full (plugged in / fully-charged) */
+#battery.full {
+    color: @blue_bright;
+}
+
+/* Optional: warning and critical color overrides */
+#battery.warning {
+    color: @warning;
+}
+
+/* custom modules */
+#custom-exit {
+    padding: 0px;
+    color: @fg;
+}
+
+#custom-system {
+    font-weight: bold;
+    opacity: 0.8;
+    color: @fg;
+}
+
+#custom-settings {
+    font-weight: bold;
+    opacity: 0.8;
+    color: @fg;
+}
+
+#custom-updates {
+    background-color: @bg_alt;
+    color: @fg;
+    border-radius: 5px;
+    padding: 2px 10px 0px 10px;
+    opacity: 0.8;
+}
+
+#custom-updates.green {
+    background-color: @bg_alt;
+}
+
+#custom-updates.yellow {
+    background-color: @warning;
+    color: @black_normal;
+}
+
+#custom-updates.red {
+    background-color: @critical;
+    color: @white_bright;
+}
+
+/* Style for launchers */
+#tray menu * {
+    min-height: 16px;
+    font-weight: bold;
+    color: @yellow_bright;
+}
+
+#tray menu separator {
+    min-height: 10px;
+}
+
+#custom-expand {
+    min-width: 25px;
+    color: @blue_normal;
+}
+
+#custom-menu {
+    color: @black_bright;
+}
+
+#group-minimized {
+    border-left: solid;
+    border-left-width: 1px;
+}
+
+#custom-updates {
+    background-color: transparent;
+}
+
+#backlight-slider slider,
+#pulseaudio-slider slider {
+    background: @bg_transparent;
+    box-shadow: none;
+}
+
+#backlight-slider trough,
+#pulseaudio-slider trough {
+    min-height: 6px;
+    border-radius: 5px;
+    background-color: #2f2f2f;
+    min-width: 90px;
+}
+
+#backlight-slider highlight,
+#pulseaudio-slider highlight {
+    border-radius: 5px;
+    background-color: @blue_normal;
+}
+
+#custom-volume-icon {
+    color: @blue_normal;
+    padding: 4px 8px;
+    background: transparent;
+    border-radius: 5px;
+}
+
+/* Custom style for the MPRIS module */
+#custom-mpris,
+#mpris {
+    color: @black_bright;
+    padding: 0px 8px;
+    border-radius: 6px;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+/* Styling when media is paused (optional) */
+#mpris.paused {
+    color: grey;
+    opacity: 0.7;
+}
+
+/* Power menu button */
+#custom-powermenu {
+    color: @bg_alt;
+    background-color: transparent;
+    font-size: 13px;
+    padding: 0px 10px 0px 0px;
+    font-family: "JetBrainsMono Nerd Font";
+}
+
+#custom-powermenu:hover {
+    color: @red_bright;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}

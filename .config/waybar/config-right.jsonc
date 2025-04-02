@@ -1,0 +1,269 @@
+[
+  {
+    // eDP-1 monitor (internal screen)
+    "output": "eDP-1",
+    "name": "edp",
+    "position": "top",
+    "layer": "top",
+    "mod": "dock",
+    "margin-top": 4,
+    "margin-left": 55,
+    "margin-right": 55,
+    "margin-bottom": 0,
+    "spacing": 10,
+    "fixed-center": true,
+    "exclusive": true,
+    "reload_style_on_change": true,
+    "modules-left": [
+      "hyprland/workspaces",
+      "wlr/taskbar",
+      "mpris"
+    ],
+    "modules-center": [
+      "clock"
+    ],
+    "modules-right": [
+      "group/expand",
+      "group/expand-3",
+      "custom/update-packages",
+      "custom/keyboard_layout",
+      "upower"
+    ],
+    "hyprland/workspaces": {
+      "format": "{name}",
+      "show-empty": true,
+      "on-click": "activate",
+      "all-outputs": false,
+      "persistent-workspaces": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": []
+      }
+    },
+    "wlr/taskbar": {
+      "format": "{icon}",
+      "icon-size": 15,
+      "tooltip-format": "{title}",
+      "on-click": "activate",
+      "on-click-middle": "close"
+    },
+    "clock": {
+      "format": "{:%I:%M %p}",
+      "rotate": 0,
+      "on-click": "/usr/local/bin/ags -t ActivityCenter",
+      "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
+      "calendar": {
+        "mode": "month",
+        "mode-mon-col": 3,
+        "on-scroll": 1,
+        "on-click-right": "mode",
+        "format": {
+          "months": "<span color='#ffead3'><b>{}</b></span>",
+          "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+          "today": "<span color='#ff6699'><b>{}</b></span>"
+        }
+      },
+      "actions": {
+        "on-click-right": "mode",
+        "on-click-forward": "tz_up",
+        "on-click-backward": "tz_down",
+        "on-scroll-up": "shift_up",
+        "on-scroll-down": "shift_down"
+      }
+    },
+    "custom/keyboard_layout": {
+      "interval": 1,
+      "exec": "~/.config/waybar/scripts/kb_layout.sh",
+      "on-click": "sh -c 'kb=$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\"); hyprctl switchxkblayout \"$kb\" next && pkill -RTMIN+1 waybar'"
+    },
+    "custom/menu": {
+      "format": "󰅃",
+      "rotate": 90
+    },
+    "tray": {
+      "icon-size": 16,
+      "rotate": 0,
+      "spacing": 3
+    },
+    "group/expand": {
+      "orientation": "horizontal",
+      "drawer": {
+        "transition-duration": 600,
+        "children-class": "not-power",
+        "transition-to-left": true
+      },
+      "modules": [
+        "custom/menu",
+        "tray"
+      ]
+    },
+    "pulseaudio": {
+      "format": "{icon}  {volume}%",
+      "rotate": 0,
+      "format-muted": "婢",
+      "tooltip-format": "{icon} {desc} // {volume}%",
+      "scroll-step": 5,
+      "format-icons": {
+        "headphone": "",
+        "hands-free": "",
+        "headset": "",
+        "phone": "",
+        "portable": "",
+        "car": "",
+        "default": [
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    "upower": {
+      "icon-size": 16,
+      "format": "",
+      "format-alt": "{}<span color='orange'>[{time}]</span>",
+      "tooltip": true,
+      "tooltip-spacing": 20,
+      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar"
+    },
+    "upower#headset": {
+      "format": " {percentage}",
+      "native-path": "/org/freedesktop/UPower/devices/headset_dev_A6_98_9A_0D_D3_49",
+      "show-icon": false,
+      "tooltip": false
+    },
+    "group/expand-3": {
+      "orientation": "horizontal",
+      "drawer": {
+        "transition-duration": 600,
+        "children-class": "not-power",
+        "transition-to-left": true,
+        "click-to-reveal": false
+      },
+      "modules": [
+        "pulseaudio",
+        "pulseaudio/slider"
+      ]
+    },
+    "mpris": {
+      "format": "{player_icon} {dynamic}",
+      "format-paused": "<span color='grey'>{status_icon} {dynamic}</span>",
+      "max-length": 30,
+      "player-icons": {
+        "default": "⏸",
+        "mpv": "🎵"
+      },
+      "status-icons": {
+        "paused": "▶"
+      },
+      "ignored-players": [
+        "firefox"
+      ]
+    },
+    "custom/update-packages": {
+      "exec": "~/.config/waybar/scripts/update_packages.sh",
+      "interval": 10,
+      "tooltip": false,
+      "format": "{}",
+      "return-type": "text",
+      "on-click": "~/.config/waybar/scripts/upgrade.sh"
+    },
+    "pulseaudio/slider": {
+      "min": 5,
+      "max": 100,
+      "rotate": 0,
+      "device": "pulseaudio",
+      "scroll-step": 1
+    }
+  },
+  {
+    // HDMI-A-1 monitor (external)
+    "output": "HDMI-A-1",
+    "name": "hdmia1",
+    "position": "top",
+    "layer": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "fixed-center": true,
+    "margin-top": 4,
+    "margin-left": 55,
+    "margin-right": 55,
+    "margin-bottom": 0,
+    "spacing": 10,
+    "reload_style_on_change": true,
+    "modules-left": [
+      "hyprland/workspaces",
+      "wlr/taskbar",
+      "mpris"
+    ],
+    "modules-right": [
+      "custom/keyboard_layout",
+      "clock"
+    ],
+    "hyprland/workspaces": {
+      "format": "{name}",
+      "show-empty": true,
+      "on-click": "activate",
+      "all-outputs": false,
+      "persistent-workspaces": {
+        "6": [],
+        "7": [],
+        "8": [],
+        "9": [],
+        "10": []
+      }
+    },
+    "wlr/taskbar": {
+      "format": "{icon}",
+      "icon-size": 15,
+      "tooltip-format": "{title}",
+      "on-click": "activate",
+      "on-click-middle": "close"
+    },
+    "mpris": {
+      "format": "<span color='#87a987'>{player_icon} </span>{dynamic}",
+      "format-paused": "<span color='grey'>{status_icon} {dynamic}</span>",
+      "max-length": 30,
+      "player-icons": {
+        "default": "",
+        "mpv": "🎵"
+      },
+      "status-icons": {
+        "paused": "▶"
+      },
+      "ignored-players": [
+        "firefox"
+      ]
+    },
+    "clock": {
+      "format": "{:%I:%M %p}",
+      "rotate": 0,
+      "on-click": "/usr/local/bin/ags -t ActivityCenter",
+      "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
+      "calendar": {
+        "mode": "month",
+        "mode-mon-col": 3,
+        "on-scroll": 1,
+        "on-click-right": "mode",
+        "format": {
+          "months": "<span color='#c5c9c5'><b>{}</b></span>",
+          "weekdays": "<span color='#e6c384'><b>{}</b></span>",
+          "today": "<span color='#e46876'><b>{}</b></span>"
+        }
+      },
+      "actions": {
+        "on-click-right": "mode",
+        "on-click-forward": "tz_up",
+        "on-click-backward": "tz_down",
+        "on-scroll-up": "shift_up",
+        "on-scroll-down": "shift_down"
+      }
+    },
+    "custom/keyboard_layout": {
+      "interval": 1,
+      "exec": "~/.config/waybar/scripts/kb_layout.sh",
+      "on-click": "hyprctl switchxkblayout '$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\")' next"
+    }
+  }
+]

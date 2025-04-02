@@ -1,0 +1,547 @@
+[
+  {
+    // general settings
+    "output": "eDP-1",
+    "name": "edp",
+    "position": "top",
+    "layer": "top",
+    "mod": "dock",
+    "margin-top": 4,
+    "margin-left": 55,
+    "margin-right": 55,
+    "margin-bottom": 0,
+    "spacing": 10,
+    "fixed-center": true,
+    "exclusive": true,
+    "reload_style_on_change": true,
+    // modules
+    "modules-left": [
+      "hyprland/workspaces",
+      "wlr/taskbar"
+    ],
+    "modules-center": [
+      "clock"
+    ],
+    "modules-right": [
+      "group/expand",
+      "group/expand-3",
+      "custom/update-packages",
+      "custom/keyboard_layout",
+      "group/expand-4"
+    ],
+    // workspaces
+    "hyprland/workspaces": {
+      "show-empty": true,
+      "sort-by-number": true,
+      "persistent_workspaces": {
+        "eDP-1": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "HDMI-A-1": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "on-click": "activate",
+      "on-scroll-up": "hyprwswalk +1",
+      "on-scroll-down": "hyprwswalk -1",
+      "all-outputs": false
+    },
+    // taskbar
+    "wlr/taskbar": {
+      "format": "{icon}",
+      "icon-size": 15,
+      "tooltip-format": "{title}",
+      "on-click": "activate",
+      "on-click-middle": "close"
+    },
+    // clock
+    "clock": {
+      "format": "{:%I:%M %p}",
+      "rotate": 0,
+      "on-click": "/usr/local/bin/ags -t ActivityCenter",
+      "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
+      "calendar": {
+        "mode": "month",
+        "mode-mon-col": 3,
+        "on-scroll": 1,
+        "on-click-right": "mode",
+        "format": {
+          "months": "<span color='#ffead3'><b>{}</b></span>",
+          "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+          "today": "<span color='#ff6699'><b>{}</b></span>"
+        }
+      },
+      "actions": {
+        "on-click-right": "mode",
+        "on-click-forward": "tz_up",
+        "on-click-backward": "tz_down",
+        "on-scroll-up": "shift_up",
+        "on-scroll-down": "shift_down"
+      }
+    },
+    "custom/keyboard_layout": {
+      "interval": 1,
+      // "exec": "hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap'",
+      "exec": "~/.config/waybar/scripts/kb_layout.sh",
+      "on-click": "sh -c 'kb=$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\"); hyprctl switchxkblayout \"$kb\" next && pkill -RTMIN+1 waybar'"
+    },
+    // hardware
+    "group/hardware": {
+      "orientation": "inherit",
+      "drawer": {
+        "transition-duration": 300,
+        "children-class": "not-memory",
+        "transition-left-to-right": false
+      },
+      "modules": [
+        "custom/system",
+        "cpu",
+        "temperature",
+        "disk",
+        "memory"
+      ]
+    },
+    "custom/menu": {
+      "format": "󰅃",
+      "rotate": 90
+    },
+    "custom/spacer": {
+      "format": "|"
+    },
+    "tray": {
+      "icon-size": 16,
+      "rotate": 0,
+      "spacing": 3
+    },
+    "group/expand": {
+      "orientation": "horizontal",
+      "drawer": {
+        "transition-duration": 600,
+        "children-class": "not-power",
+        "transition-to-left": true
+        //  "click-to-reveal": true
+      },
+      "modules": [
+        "custom/menu",
+        "tray"
+      ]
+    },
+    // system
+    "custom/system": {
+      "format": "<span size='small'>  </span>",
+      "tooltip": false
+    },
+    // CPU
+    "cpu": {
+      "format": " 󰍛 {usage}% ",
+      "on-click": "kitty btop"
+    },
+    // temperature
+    "temperature": {
+      "format": " 󰈸 {temperatureC}°C ",
+      "on-click": "kitty btop"
+    },
+    // harddisc space
+    "disk": {
+      "interval": 30,
+      "format": " 󰋊 {percentage_used}% ",
+      "path": "/",
+      "on-click": "kitty btop"
+    },
+    // memory
+    "memory": {
+      "format": "  {}% ",
+      "on-click": "kitty btop"
+    },
+    // audio
+    "pulseaudio": {
+      "format": "{icon}  {volume}%",
+      "rotate": 0,
+      "format-muted": "婢",
+      "tooltip-format": "{icon} {desc} // {volume}%",
+      "scroll-step": 5,
+      "format-icons": {
+        "headphone": "",
+        "hands-free": "",
+        "headset": "",
+        "phone": "",
+        "portable": "",
+        "car": "",
+        "default": [
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    "custom/pulseaudio-icon": {
+      "format": "", // Any icon (you can change it)
+      "tooltip": true,
+      "on-click": "pavucontrol",
+      "on-click-right": "pamixer -t", // Optional: mute toggle on right-click
+      "interval": 10 // Optional: update interval if dynamic
+    },
+    // bluetooth
+    "bluetooth": {
+      "format": " {status}",
+      "format-disabled": " {status}",
+      "format-off": " {status}",
+      "interval": 30,
+      "on-click": "blueman-manager",
+      "format-no-controller": ""
+    },
+    // network
+    "network": {
+      "format": "{ifname}",
+      "format-wifi": " {signalStrength}%",
+      "format-ethernet": "󰌘 {ifname}",
+      "format-disconnected": "disconnected",
+      "tooltip-format": "󰌘 {ifname} via {gwaddri}",
+      "tooltip-format-wifi": " {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthUpBits}  {bandwidthDownBits}",
+      "tooltip-format-ethernet": "󰌘 {ifname}\nIP: {ipaddr}\n  {bandwidthUpBits}  {bandwidthDownBits}",
+      "tooltip-format-disconnected": "disconnected",
+      "max-length": 50,
+      "on-click": "nm-connection-editor"
+      //"on-click": "~/dotfiles/.settings/networkmanager.sh"
+    },
+    "battery": {
+      "states": {
+        "good": 95,
+        "warning": 30,
+        "critical": 20
+      },
+      "format": "{icon} {capacity}%",
+      "format-plugged": "󰂄",
+      "format-charging": " {capacity}%",
+      "format-full": " {capacity}%",
+      "format-alt": "{icon} {time}",
+      "format-icons": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar",
+      "tooltip": true
+    },
+    // power menu
+    "custom/exit": {
+      "format": "",
+      "on-click": "wlogout -b 2",
+      "tooltip": false
+    },
+    "group/expand-4": {
+      "orientation": "horizontal",
+      "drawer": {
+        "transition-duration": 600,
+        "children-class": "not-power",
+        "transition-to-left": true,
+        "click-to-reveal": true
+      },
+      "modules": [
+        "upower",
+        "upower/headset"
+      ]
+    },
+    "upower": {
+      "icon-size": 20,
+      "format": "",
+      "format-alt": "{}<span color='orange'>[{time}]</span>",
+      "tooltip": true,
+      "tooltip-spacing": 20,
+      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar"
+    },
+    "upower#headset": {
+      "format": " {percentage}",
+      "native-path": "/org/freedesktop/UPower/devices/headset_dev_A6_98_9A_0D_D3_49",
+      "show-icon": false,
+      "tooltip": false
+    },
+    "group/expand-2": {
+      "orientation": "horizontal",
+      "drawer": {
+        "transition-duration": 600,
+        "children-class": "not-power",
+        "transition-to-left": true,
+        "click-to-reveal": true
+      },
+      "modules": [
+        "backlight",
+        "backlight/slider",
+        "custom/smallspacer",
+        "custom/led"
+      ]
+    },
+    "group/expand-3": {
+      "orientation": "horizontal",
+      "drawer": {
+        "transition-duration": 600,
+        "children-class": "not-power",
+        "transition-to-left": true,
+        "click-to-reveal": false
+      },
+      "modules": [
+        "pulseaudio",
+        "pulseaudio/slider"
+      ]
+    },
+    "mpris": {
+      "format": "{player_icon} {dynamic}",
+      "format-paused": "<span color='grey'>{status_icon} {dynamic}</span>",
+      "max-length": 30,
+      "player-icons": {
+        "default": "⏸",
+        "mpv": "🎵"
+      },
+      "status-icons": {
+        "paused": "▶"
+      },
+      "ignored-players": [
+        "firefox"
+      ]
+    },
+    "custom/updates": {
+      "format": "{} {icon}",
+      "return-type": "json",
+      "format-icons": {
+        "has-updates": "󱍷",
+        "updated": ""
+      },
+      "exec-if": "which waybar-module-pacman-updates",
+      "exec": "waybar-module-pacman-updates --no-zero-output"
+    },
+    "custom/update-packages": {
+      "exec": "~/.config/waybar/scripts/update_packages.sh",
+      "interval": 10,
+      "tooltip": false,
+      "format": "{}",
+      "return-type": "text",
+      "on-click": "~/.config/waybar/scripts/upgrade.sh"
+    },
+    "pulseaudio/slider": {
+      "min": 5,
+      "max": 100,
+      "rotate": 0,
+      "device": "pulseaudio",
+      "scroll-step": 1
+    }
+  },
+  {
+    // === DCA: HDMI monitor ===
+    "output": "HDMI-1",
+    "name": "hdmi",
+    "position": "top",
+    "layer": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "fixed-center": true,
+    "margin-top": 4,
+    "margin-left": 55,
+    "margin-right": 55,
+    "margin-bottom": 0,
+    "spacing": 10,
+    "reload_style_on_change": true,
+    "modules-left": [
+      "hyprland/workspaces",
+      "wlr/taskbar",
+      "mpris"
+    ],
+    "modules-right": [
+      "custom/keyboard_layout",
+      "clock"
+    ],
+    "mpris": {
+      "format": "{player_icon} {dynamic}",
+      "format-paused": "<span color='grey'>{status_icon} {dynamic}</span>",
+      "max-length": 30,
+      "player-icons": {
+        "default": "⏸",
+        "mpv": "🎵"
+      },
+      "status-icons": {
+        "paused": "▶"
+      },
+      "ignored-players": [
+        "firefox"
+      ]
+    },
+    // clock
+    "clock": {
+      "format": "{:%I:%M %p}",
+      "rotate": 0,
+      "on-click": "/usr/local/bin/ags -t ActivityCenter",
+      "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
+      "calendar": {
+        "mode": "month",
+        "mode-mon-col": 3,
+        "on-scroll": 1,
+        "on-click-right": "mode",
+        "format": {
+          "months": "<span color='#ffead3'><b>{}</b></span>",
+          "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+          "today": "<span color='#ff6699'><b>{}</b></span>"
+        }
+      },
+      "actions": {
+        "on-click-right": "mode",
+        "on-click-forward": "tz_up",
+        "on-click-backward": "tz_down",
+        "on-scroll-up": "shift_up",
+        "on-scroll-down": "shift_down"
+      }
+    },
+    // workspaces
+    "hyprland/workspaces": {
+      "show-empty": true,
+      "sort-by-number": true,
+      "persistent_workspaces": {
+        "eDP-1": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "HDMI-1": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "on-click": "activate",
+      "on-scroll-up": "hyprwswalk +1",
+      "on-scroll-down": "hyprwswalk -1",
+      "all-outputs": false
+    },
+    // taskbar
+    "wlr/taskbar": {
+      "format": "{icon}",
+      "icon-size": 15,
+      "tooltip-format": "{title}",
+      "on-click": "activate",
+      "on-click-middle": "close"
+    },
+    // keyboard layout
+    "custom/keyboard_layout": {
+      "interval": 1,
+      // "exec": "hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap'",
+      "exec": "~/.config/waybar/scripts/kb_layout.sh",
+      "on-click": "hyprctl switchxkblayout '$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\")' next"
+    }
+  },
+  {
+    // === Home: HDMI-A-1 monitor ===
+    "output": "HDMI-A-1",
+    "name": "hdmia1",
+    "position": "top",
+    "layer": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "fixed-center": true,
+    "margin-top": 4,
+    "margin-left": 55,
+    "margin-right": 55,
+    "margin-bottom": 0,
+    "spacing": 10,
+    "reload_style_on_change": true,
+    "modules-left": [
+      "hyprland/workspaces",
+      "wlr/taskbar",
+      "mpris"
+    ],
+    "modules-right": [
+      "custom/keyboard_layout",
+      "clock"
+    ],
+    "mpris": {
+      "format": "<span color='#87a987'>{player_icon} </span>{dynamic}",
+      "format-paused": "<span color='grey'>{status_icon} {dynamic}</span>",
+      "max-length": 30,
+      "player-icons": {
+        "default": "",
+        "mpv": "🎵"
+      },
+      "status-icons": {
+        "paused": "▶"
+      },
+      "ignored-players": [
+        "firefox"
+      ]
+    },
+    // clock
+    "clock": {
+      "format": "{:%I:%M %p}",
+      "rotate": 0,
+      "on-click": "/usr/local/bin/ags -t ActivityCenter",
+      "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
+      "calendar": {
+        "mode": "month",
+        "mode-mon-col": 3,
+        "on-scroll": 1,
+        "on-click-right": "mode",
+        "format": {
+          "months": "<span color='#c5c9c5'><b>{}</b></span>",
+          "weekdays": "<span color='#e6c384'><b>{}</b></span>",
+          "today": "<span color='#e46876'><b>{}</b></span>"
+        }
+      },
+      "actions": {
+        "on-click-right": "mode",
+        "on-click-forward": "tz_up",
+        "on-click-backward": "tz_down",
+        "on-scroll-up": "shift_up",
+        "on-scroll-down": "shift_down"
+      }
+    },
+    // workspaces
+    "hyprland/workspaces": {
+      "show-empty": true,
+      "sort-by-number": true,
+      "persistent_workspaces": {
+        "eDP-1": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "HDMI-A-1": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "all-outputs": false,
+      "on-click": "activate",
+      "on-scroll-up": "hyprwswalk +1",
+      "on-scroll-down": "hyprwswalk -1"
+    },
+    // taskbar
+    "wlr/taskbar": {
+      "format": "{icon}",
+      "icon-size": 15,
+      "tooltip-format": "{title}",
+      "on-click": "activate",
+      "on-click-middle": "close"
+    },
+    "custom/keyboard_layout": {
+      "interval": 1,
+      // "exec": "hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap'",
+      "exec": "~/.config/waybar/scripts/kb_layout.sh",
+      "on-click": "hyprctl switchxkblayout '$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\")' next"
+    }
+  }
+]
