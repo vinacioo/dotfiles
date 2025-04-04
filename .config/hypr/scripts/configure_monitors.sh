@@ -117,7 +117,7 @@ setup_lg_left() {
   # Launch applications
   sleep 2
   launch_app "librewolf" 1 "LibreWolf"
-  launch_app "betterbird" 10 "eu.betterbird.Betterbird"
+  launch_app "thunderbird" 10 "thunderbird"
 
   notify-send "Monitor Setup" "HDMI-A-1 (LG) on LEFT — Workspaces 1-5 on HDMI, 6-10 on eDP" -t 5000
 }
@@ -156,7 +156,7 @@ setup_dell_right() {
 
   # Launch applications
   sleep 2
-  launch_app "betterbird" 1 "eu.betterbird.Betterbird"
+  launch_app "thunderbird" 1 "thunderbird"
   launch_app "librewolf" 10 "LibreWolf"
 
   notify-send "Monitor Setup" "Dell HDMI-A-1 on RIGHT — Workspaces 1-5 on eDP, 6-10 on HDMI" -t 5000
@@ -196,7 +196,7 @@ setup_generic_right() {
 
   # Launch applications
   sleep 2
-  launch_app "betterbird" 1 "eu.betterbird.Betterbird"
+  launch_app "thunderbird" 1 "thunderbird"
   launch_app "librewolf" 10 "LibreWolf"
 
   notify-send "Monitor Setup" "HDMI on RIGHT — Workspaces 1-5 on eDP, 6-10 on HDMI" -t 5000
@@ -231,7 +231,7 @@ setup_single_monitor() {
   # Launch applications
   sleep 2
   launch_app "librewolf" 1 "LibreWolf"
-  launch_app "betterbird" 10 "eu.betterbird.Betterbird"
+  launch_app "thunderbird" 10 "thunderbird"
 
   notify-send "Monitor Setup" "Single Monitor — All workspaces on eDP-1" -t 5000
 }
