@@ -5,7 +5,7 @@ add_newline = false
 format = """$directory$character"""
 
 # move the rest of the prompt to the right
-right_format = """$python$status$all"""
+right_format = """$python$status"""
 
 [character]
 success_symbol = "[](red)[](yellow)[](green)"
@@ -19,7 +19,7 @@ style = 'bold green'
 [python]
 style = "#3C3836 bg:none"
 format = '[(\($virtualenv\) )]($style)'
-pyenv_prefix = 'pyenv'
+# pyenv_prefix = 'pyenv'
 pyenv_version_name = true
 
 [git_status]

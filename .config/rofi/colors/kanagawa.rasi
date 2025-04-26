@@ -1,0 +1,12 @@
+/**
+ * Kanagawa Dragon Theme for Rofi
+ * Based on Kanagawa colorscheme
+ **/
+* {
+    background:     #242424;  /* sumiInk0 - deep dark background */
+    background-alt: #333333;  /* sumiInk3 - slightly lighter background */
+    foreground:     #DCD7BA;  /* fujiWhite - primary text color */
+    selected:       #8ba4b0;  /* crystalBlue - selection highlight */
+    active:         #8a9a7b;  /* springGreen - active items */
+    urgent:         #e46876;  /* peachRed - urgent notifications */
+}

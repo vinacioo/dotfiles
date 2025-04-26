@@ -11,7 +11,7 @@ padding = { x = 10, y = 10 }
 # Kanagawa Dragon Alacritty Colors
 
 [colors.primary]
-background = '#202020' # lighter then dragon for scratchpad
+background = '#181616'
 foreground = '#c5c9c5'
 
 [colors.normal]

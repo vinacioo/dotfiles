@@ -7,7 +7,7 @@
 */
 
 /* Kanagawa Dragon Color Variables */
-@define-color bg #181616;
+@define-color bg #101010;
 @define-color fg #c5c9c5;
 @define-color black_normal #0d0c0c;
 @define-color black_bright #a6a69c;
@@ -70,7 +70,7 @@ window.edp#waybar, window.hdmi#waybar, window.hdmi1#waybar {
 
 /* workspaces */
 #workspaces {
-    border-radius: 5px;
+    border-radius: 0px;
     border: 0px;
     font-weight: normal;
     font-style: normal;
@@ -96,8 +96,8 @@ window.edp#waybar, window.hdmi#waybar, window.hdmi1#waybar {
     color: @yellow_bright;
     background: @bg_alt;
     transition: all 0.3s ease-in-out;
-    opacity: 1.0;
-    border-radius: 6px;
+    opacity: 0.6;
+    border-radius: 0px;
     box-shadow: inset 0px 0px 0px 2px #282828;
 }
 
@@ -109,8 +109,8 @@ window.edp#waybar, window.hdmi#waybar, window.hdmi1#waybar {
 #workspaces button.active, 
 #workspaces button.focused {
     color: @yellow_bright;
-    background: @bg_alt;
-    border-radius: 6px;
+    background: alpha(@bg_alt, 0.9);
+    border-radius: 0px;
     transition: all 0.3s ease-in-out;
     opacity: 1.0;
 }
@@ -124,7 +124,7 @@ window.edp#waybar, window.hdmi#waybar, window.hdmi1#waybar {
     color: @yellow_bright;
     background: @bg_alt;
     opacity: 0.9;
-    border-radius: 6px;
+    border-radius: 0px;
     border: none;
     box-shadow: inset 0px 0px 0px 2px #282828;
 }
@@ -157,15 +157,15 @@ window.edp#waybar, window.hdmi#waybar, window.hdmi1#waybar {
 
 /* tooltip */
 tooltip {
-    background: @bg;
+    background: #202020;
     color: @blue_normal;
-    border-radius: 7px;
-    border: 2px solid @selection_bg;
+    border-radius: 3px;
+    border: 2px solid #242424;
 }
 
 tooltip label {
     border-radius: 5px;
-    background-color: @bg;
+    background-color: #202020;
     opacity: 0.8;
     font-size: 12px;
     color: @fg;
@@ -180,6 +180,10 @@ tooltip label {
     /* Optional margin adjustments */
 }
 
+#custom-calendar {
+    color: #e46876;  /* Kanagawa blue */
+}
+
 /* clock */
 #clock {
     color: @blue_bright;
@@ -189,7 +193,6 @@ tooltip label {
     opacity: 1;
     border: none;
 }
-
 /* hardware group */
 #cpu, #temperature, #disk, #memory {
     padding: 0px;

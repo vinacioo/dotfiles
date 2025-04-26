@@ -20,6 +20,7 @@
       "mpris"
     ],
     "modules-center": [
+      "custom/calendar",
       "clock"
     ],
     "modules-right": [
@@ -48,6 +49,13 @@
       "tooltip-format": "{title}",
       "on-click": "activate",
       "on-click-middle": "close"
+    },
+    "custom/calendar": {
+      "format": "󱕻", // Calendar icon (you can change this to any icon you prefer)
+      "tooltip": false,
+      "on-click": "ags toggle calendar",
+      "return-type": "json",
+      "interval": "once"
     },
     "clock": {
       "format": "{:%I:%M %p}",
@@ -113,9 +121,9 @@
         "portable": "",
         "car": "",
         "default": [
-          "",
-          "",
-          ""
+          "",
+          "",
+          ""
         ]
       }
     },
@@ -167,7 +175,7 @@
       "tooltip": false,
       "format": "{}",
       "return-type": "text",
-      "on-click": "~/.config/waybar/scripts/upgrade.sh"
+      "on-click": "~/.pyenv/versions/3.13.1/bin/pypr toggle updates"
     },
     "pulseaudio/slider": {
       "min": 5,
@@ -199,6 +207,7 @@
     ],
     "modules-right": [
       "custom/keyboard_layout",
+      "custom/calendar",
       "clock"
     ],
     "hyprland/workspaces": {
@@ -226,7 +235,7 @@
       "format-paused": "<span color='grey'>{status_icon} {dynamic}</span>",
       "max-length": 30,
       "player-icons": {
-        "default": "",
+        "default": "⏸",
         "mpv": "🎵"
       },
       "status-icons": {
@@ -236,10 +245,17 @@
         "firefox"
       ]
     },
+    "custom/calendar": {
+      "format": "󱕻", // Calendar icon (you can change this to any icon you prefer)
+      "tooltip": false,
+      "on-click": "ags toggle calendar",
+      "return-type": "json",
+      "interval": "once"
+    },
     "clock": {
       "format": "{:%I:%M %p}",
       "rotate": 0,
-      "on-click": "/usr/local/bin/ags -t ActivityCenter",
+      "on-click": "/usr/bin/ags -t ActivityCenter",
       "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
       "calendar": {
         "mode": "month",

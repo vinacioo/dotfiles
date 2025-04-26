@@ -427,6 +427,26 @@ return {
       -- end,
     }
 
+    -- Selected Lines
+    component.selected_lines = {
+      provider = function()
+        local mode = vim.fn.mode()
+        if mode == "v" or mode == "V" or mode == "\22" then -- Visual, Visual Line, Visual Block
+          local start_line = vim.fn.line("v")
+          local end_line = vim.fn.line(".")
+          local count = math.abs(end_line - start_line) + 1
+          return tostring(count)
+        end
+        return ""
+      end,
+      hl = {
+        fg = color.red,
+        bg = color.bg_0,
+      },
+      left_sep = "block",
+      right_sep = "block",
+    }
+
     -- Define custom highlights for the icon and the text
     vim.api.nvim_set_hl(0, "VenvIcon", { fg = color.green, bg = color.bg_0 })
     vim.api.nvim_set_hl(0, "VenvText", { fg = color.white_darker, bg = color.bg_0 })
@@ -457,6 +477,7 @@ return {
       component.separator_lsp_right_0,
       component.separator_lsp_right_1,
       component.position,
+      component.selected_lines,
       component.total_lines,
       component.line_percentage,
     }

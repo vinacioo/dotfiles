@@ -13,7 +13,7 @@ super + Home
 
 # Set Keyboard layout en/ptbr
 alt + space
-  ~/.config/bspwm/scripts/toggle_layout.sh &
+  sh ~/.config/bspwm/scripts/toggle_layout.sh &
 
 # -------------------------------------------------
 # ----------          Launchers          ----------
@@ -21,11 +21,11 @@ alt + space
 
 # Poweroff Menu
 super + shift + p
-  ~/.config/rofi/powermenu/type-2/powermenu.sh &
+  sh ~/.config/rofi/powermenu/type-2/powermenu.sh &
 
 # Apps
 alt + F2
-  ~/.config/rofi/launchers/type-2/launcher.sh &
+  sh ~/.config/rofi/launchers/type-2/launcher.sh &
 
 # -------------------------------------------------
 # ----------        Applications         ----------
@@ -41,7 +41,11 @@ super + d
 
 # Firefox
 super + b
-  librefox &
+  firefox &
+
+# Joplin
+super  + j
+  joplin-desktop &
 
 # Betterbird
 super + e
@@ -62,7 +66,7 @@ super + x
 
 # Ranger
 super + r
-	ghostty -e yazi
+	ghostty -e ranger
 
 # Flameshot
 Print
@@ -90,7 +94,7 @@ super + {_,shift + }q
 
 # Switch to last node / desktop
 super + Tab
-  bspc {node,desktop} --focus last
+    bspc {node,desktop} --focus last
 
 # Window focus and swap Vim way
 super + {_,shift + }{h,j,k,l}
@@ -110,45 +114,37 @@ super + {_,shift + }{1-9,0}
 
 # Moving floating window
 super + ctrl + {Up,Down,Left,Right}
-  ~/.config/bspwm/scripts/move_floating.sh {up,down,left,right} &
+  bash -c 'if [ "$(bspc query -N -n focused.floating)" ]; then \
+    case "$1" in \
+      Up) bspc node -v 0 -10 ;; \
+      Down) bspc node -v 0 10 ;; \
+      Left) bspc node -v -10 0 ;; \
+      Right) bspc node -v 10 0 ;; \
+    esac \
+  fi' _ {Up,Down,Left,Right}
 
 # Set window state
 super + {s,f}
   bspc node -t {\~floating,\~fullscreen}
 
 # Moving window to next monitor and focus on it
-super + shift + {Left,Down,Up,Right}
-	dir={west,south,north,east}; \
-	bspc node -s "$dir.local" --follow \
-	    || bspc node -m "$dir" --follow
-
-super + shift + {comma,period}
-    bspc node -m {next,prev} --follow
+super + shift + {Left,Right}
+  bspc node -m next && bspc monitor -f next && bspc node -f $(bspc query -N -n newest) && xdotool mousemove --window $(bspc query -N -n newest) 0 0
 
 # Resize windows
 super + shift + alt + {h,j,k,l}
-  ~/.config/bspwm/scripts/bspwm_resize.sh {west,south,north,east} 10
-
-
+    ~/.config/bspwm/scripts/bspwm_resize.sh {west,south,north,east} 10
 
 # -------------------------------------------------
 # ----------        Media Control        ----------
 # -------------------------------------------------
 
-# Increase volume (Blue icon)
+# use "pactl list sinks short" para descobrir o output
 XF86AudioRaiseVolume
-    pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -u low -r 9993 -i "$HOME/.config/bspwm/icons/vol_up.png" "Volume: $(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]*%' | head -1)"
+	pactl set-sink-volume @DEFAULT_SINK@ +5%
 
-# Decrease volume (Red icon)
 XF86AudioLowerVolume
-    pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -u low -r 9993 -i "$HOME/.config/bspwm/icons/vol_down.png" "Volume: $(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]*%' | head -1)"
-# # Increase volume
-# XF86AudioRaiseVolume
-#     pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -u low -r 9993 "🔊 Volume: $(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]*%' | head -1)"
-#
-# # Decrease volume
-# XF86AudioLowerVolume
-#     pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -u low -r 9993 "🔉 Volume: $(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]*%' | head -1)"
+	pactl set-sink-volume @DEFAULT_SINK@ -5%
 
 XF86AudioMute
 	pactl set-sink-mute @DEFAULT_SINK@ toggle
@@ -165,39 +161,34 @@ control + F12
 control + F10
     dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
 
-
-# Connect JLab JBuds
-super + j
-  setsid ~/.config/bspwm/scripts/connect_jbuds.sh &
-
-# Disconnect JLab JBuds
-super + shift + j
-  setsid ~/.config/bspwm/scripts/disconnect_jbuds.sh &
-
 # -------------------------------------------------
 # ----------       Custom Scripts        ----------
 # -------------------------------------------------
 
 # Toggle polybar
 super + p
-  ~/.config/polybar/scripts/toggle-polybar.sh &
+  sh ~/.config/polybar/scripts/toggle-polybar.sh &
 
 # Translate from selection
 super + t
-  ~/.config/bspwm/scripts/translation.sh &
+  sh ~/.config/bspwm/scripts/translation.sh &
 
 # Translate from clipboard
 super + shift + t
-  ~/.config/bspwm/scripts/translation-clipboard.sh &
+  sh ~/.config/bspwm/scripts/translation-clipboard.sh &
 
 # Speak from selection
 super + v
-  ~/.config/bspwm/scripts/tts.sh &
+  sh ~/.config/bspwm/scripts/tts.sh &
 
 
 # Speak from clipboard
 super + shift + v
-  ~/.config/bspwm/scripts/tts_clipboard.sh &
+  sh ~/.config/bspwm/scripts/tts_clipboard.sh &
+
+# Swap monitors
+super + space
+  sh ~/.config/bspwm/scripts/swap-workspaces.sh &
 
 # set the node flags
 super + ctrl + {m,x,y,z}
@@ -220,8 +211,8 @@ super + F7
     xrandr --output eDP-1 --primary --auto --output HDMI-1 --off && autorandr -l only-edp && bspc wm -r
 
 # Swap monitors
-super + space
-    ~/.config/bspwm/scripts/swap-workspaces.sh &
+super + ctrl + s
+    bash ~/.config/bspwm/scripts/swap-workspaces.sh &
 
 # -------------------------------------------------
 # ----------         Miscelanious        ----------
@@ -229,11 +220,11 @@ super + space
 
 # Flash window
 super + a
-  ~/.pyenv/versions/3.13.1/envs/pysystem/bin/flash_window &
+  /home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flash_window &
 
 # Terminal Scratchpad
 ctrl + 1
-  ~/.config/bspwm/scripts/scratchpad-term.sh &
+    sh ~/.config/bspwm/scripts/scratchpad-term.sh &
 
 # Btop Scratchpad
 ctrl + 2

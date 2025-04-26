@@ -1,6 +1,5 @@
 source ~/.config/fish/alias.fish
 
-
 # Configure Jump
 status --is-interactive; and source (jump shell fish | psub)
 
@@ -12,6 +11,9 @@ set -Ux TERMINAL alacritty
 # Remove the virtualenv prompt from fish config, will be in starship
 set -Ux VIRTUAL_ENV_DISABLE_PROMPT 1
 
+# For setting theme to GTK
+export GTK_THEME=Adwaita:dark
+
 # --------- fzf
 # https://github.com/PatrickF1/fzf.fish#configuration
 
@@ -21,7 +23,7 @@ set fzf_history_time_format %d-%m-%y
 set fzf_preview_dir_cmd eza --all --color=always
 set -g fzf_fd_opts "--hidden --exclude .git"
 
-fzf_configure_bindings --history=\ch --directory=\cf --git_log=\cg --git_status=\cs --processes=\cp --variables=\cv
+fzf_configure_bindings --history=\cr --git_log=\cg --git_status=\cs --processes=\cp --variables=\cv
 
 # Fzf for files
 function fzf_vim
@@ -32,9 +34,8 @@ function fzf_vim
 end
 
 for mode in insert default visual normal
-    bind -M $mode \cr fzf_vim
+    bind -M $mode \cf fzf_vim
 end
-
 
 # Enable vi-mode
 #fish_vi_key_bindings
@@ -45,15 +46,14 @@ bind -M insert -k nul accept-autosuggestion
 bind -M visual -k nul accept-autosuggestion
 
 # Custom Keybind
-#bind -M insert \cA beginning-of-line
-#bind -M insert \cE end-of-line
 for mode in insert default visual
     bind -M $mode \ca beginning-of-line
     bind -M $mode \ce end-of-line
-    #bind -M $mode \cp up-or-search
-    #bind -M $mode \cn down-or-search
     bind -M $mode \cj execute
 end
+
+# unbind ctrl+s
+bind -e ctrl-s
 
 # colorscheme
 #!/usr/bin/fish
@@ -102,16 +102,12 @@ set -x PATH "$PYENV_ROOT/bin" $PATH
 # Initialize pyenv without rehashing for faster startup
 eval (pyenv init - --no-rehash | source)
 eval (pyenv virtualenv-init - | source)
-##set -Ux PYENV_ROOT $HOME/.pyenv
-#fish_add_path $PYENV_ROOT/bin
-#
-## pyenv
-#if type -q pyenv
-#    set -Ux PYENV_ROOT $HOME/.pyenv
-#    set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
-#    status --is-interactive; and pyenv init --path | source
-#    status --is-interactive; and pyenv init - | source
-#    status --is-interactive; and pyenv virtualenv-init - | source
-#end
+
+# setting pypr path
+set -U fish_user_paths $HOME/.pyenv/versions/3.13.1/bin $fish_user_paths
+
+# for go bin
+set -gx PATH $HOME/go/bin $PATH
+
 # starship
 starship init fish | source

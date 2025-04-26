@@ -16,7 +16,7 @@ configuration {
 }
 
 /*****----- Global Properties -----*****/
-@import                          "shared/colors.rasi"
+@import                          "colors/gruvbox.rasi"
 @import                          "shared/fonts.rasi"
 
 /*****----- Main Window -----*****/
