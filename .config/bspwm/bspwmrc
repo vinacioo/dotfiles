@@ -1,16 +1,19 @@
 #!/bin/sh
 
 export SXHKD_SHELL="/bin/sh"
-# export XDG_CURRENT_DESKTOP=bspwm
+export XDG_CURRENT_DESKTOP=bspwm
 
 pgrep -x sxhkd >/dev/null || sxhkd &
 
 # remapping caps lock
-setxkbmap -option caps:escape &
+setxkbmap -option caps:escape
 
 # Apps on boot
 /home/vinacio/.pyenv/versions/3.13.1/envs/pysystem/bin/flashfocus &
 flameshot &
+picom &
+nm-applet &
+blueman-applet &
 
 # Remove background cross pointer
 xsetroot -cursor_name left_ptr
@@ -60,20 +63,16 @@ configure_monitors() {
     autorandr -l hdmi-left
 
     # Assign workspaces for HDMI-LEFT
-    bspc monitor eDP-1 -d I II III IV V
-    bspc monitor HDMI-1 -d VI VII VIII IX X
-    bspc monitor HDMI-1 -f ^1
-    bspc monitor eDP-1 -f ^10
+    bspc monitor eDP-1 -d I II III IV V && bspc monitor HDMI-1 -d VI VII VIII IX X
+    bspc monitor HDMI-1 -f ^1 && bspc monitor eDP-1 -f ^10
 
   elif [ -n "$HDMI_DISPLAY" ]; then
     echo "Detected HDMI monitor: $HDMI_DISPLAY. Applying hdmi-right profile..."
     autorandr -l hdmi-right
 
     # Assign workspaces for HDMI-RIGHT
-    bspc monitor eDP-1 -d I II III IV V
-    bspc monitor HDMI-1 -d VI VII VIII IX X
-    bspc monitor HDMI-1 -f ^1
-    bspc monitor eDP-1 -f ^10
+    bspc monitor eDP-1 -d I II III IV V && bspc monitor HDMI-1 -d VI VII VIII IX X
+    bspc monitor HDMI-1 -f ^1 && bspc monitor eDP-1 -f ^10
 
   else
     echo "No HDMI monitor detected. Applying only-edp profile..."
@@ -93,18 +92,14 @@ configure_monitors() {
   # Restart Polybar to update workspaces
   pkill polybar
   ~/.config/polybar/launch_polybar.sh &
+
 }
 
 # Run the monitor configuration function
 configure_monitors
 
-# Start other services
-picom &
-nm-applet &
-/home/vinacio/.pyenv/shims/flashfocus &
-
 # Set wallpaper
-wallpaper="/home/vinacio/.config/bspwm/wallpapers/simple.png"
+wallpaper="/home/vinacio/.config/bspwm/wallpapers/ireland.jpg"
 feh --bg-fill "$wallpaper"
 
 # bspwm settings
@@ -132,7 +127,7 @@ LG_MONITOR=$(hwinfo --monitor | grep "Model:" | grep "LG ELECTRONICS 23MP55")
 
 if [ -n "$LG_MONITOR" ]; then
   echo "LG ELECTRONICS 23MP55 detected. Applying hdmi-left rules."
-  bspc rule -a "firefox" --one-shot desktop='^1' follow=on focus=on
+  bspc rule -a "LibreWolf" --one-shot desktop='^1' follow=on focus=on
   bspc rule -a "Logseq" --one-shot desktop='^2'
   bspc rule -a discord desktop='^7'
   bspc rule -a Spotify desktop='^8'
@@ -144,7 +139,7 @@ if [ -n "$LG_MONITOR" ]; then
 
 elif [ -n "$HDMI_DISPLAY" ]; then
   echo "HDMI detected. Applying hdmi-right rules."
-  bspc rule -a "firefox" --one-shot desktop='^10' follow=on focus=on
+  bspc rule -a "LibreWolf" --one-shot desktop='^10' follow=on focus=on
   bspc rule -a "Logseq" --one-shot desktop='^9'
   bspc rule -a discord desktop='^3'
   bspc rule -a Spotify desktop='^4'
@@ -156,7 +151,7 @@ elif [ -n "$HDMI_DISPLAY" ]; then
 
 else
   echo "No HDMI detected. Applying only-edp rules."
-  bspc rule -a "firefox" --one-shot desktop='^1' follow=on focus=on
+  bspc rule -a "LibreWolf" --one-shot desktop='^1' follow=on focus=on
   bspc rule -a "Logseq" --one-shot desktop='^2'
   bspc rule -a discord desktop='^7'
   bspc rule -a Spotify desktop='^8'
@@ -167,20 +162,13 @@ else
   setxkbmap -model abnt2 -layout br -variant abnt2
 fi
 
-# bspc rule -a "firefox" --one-shot desktop='^1' follow=on focus=on
-# bspc rule -a "Logseq" --one-shot desktop='^2'
-# bspc rule -a discord desktop='^7'
-# bspc rule -a Spotify desktop='^8'
-# bspc rule -a "Zotero" --one-shot desktop='^9'
-# # external rule to make zotero dialog appear above all to confirm
-# # bspc config external_rules_command ~/.config/bspwm/scripts/external_rules.sh
-# bspc rule -a "eu.betterbird.Betterbird" desktop='^10' follow=on focus=on
 bspc rule -a 'Alacritty:test' state=floating center=true rectangle=600x600+0+0
-bspc rule -a Blueman-manager state=floating center=true rectangle=400x600+0+0
-bspc rule -a pavucontrol state=floating center=true rectangle=700x600+0+0
-bspc rule -a file-roller state=floating center=true
-bspc rule -a URxvt state=floating focus=on
-bspc rule -a Toolkit state=floating
+for app in Blueman-manager pavucontrol file-roller URxvt Toolkit; do
+  bspc rule -a "$app" state=floating
+done
+bspc rule -a Blueman-manager center=true rectangle=400x600+0+0
+bspc rule -a pavucontrol center=true rectangle=700x600+0+0
+
 bspc rule -a Gsimplecal state=floating center=true
 bspc rule -a gimp-operation-tool state=floating rectangle=500x500+0+0
 bspc rule -a '*:*:Picture-in-Picture' state=floating center=true rectangle=840x473+0+0
@@ -195,10 +183,10 @@ if [ ! -f /tmp/bspwm_boot_done_apps ]; then
   # echo "Fresh boot detected, launching apps..."
 
   # Start apps only on fresh boot
-  sleep 1 && firefox &
-  sleep 1 && zotero &
-  sleep 1 && betterbird &
-  sleep 1 && logseq &
+  (sleep 1 && librewolf) &
+  # (sleep 1 && zotero) &
+  (sleep 1 && betterbird) &
+  # (sleep 1 && logseq) &
 
   # Create the flag file to mark the boot as done
   touch /tmp/bspwm_boot_done_apps
