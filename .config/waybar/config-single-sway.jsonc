@@ -15,7 +15,7 @@
     "exclusive": true,
     "reload_style_on_change": true,
     "modules-left": [
-      "hyprland/workspaces",
+      "sway/workspaces",
       "wlr/taskbar",
       "mpris"
     ],
@@ -28,13 +28,23 @@
       "group/expand-3",
       "custom/update-packages",
       "custom/keyboard_layout",
-      "upower",
-      "custom/powermenu"
+      "upower"
     ],
-    "hyprland/workspaces": {
+    "sway/workspaces": {
       "format": "{name}",
-      "show-empty": true,
-      "on-click": "activate",
+      "format-icons": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "0"
+      },
+      "disable-scroll": false,
       "all-outputs": false
     },
     "wlr/taskbar": {
@@ -54,13 +64,10 @@
     "clock": {
       "format": "{:%I:%M %p}",
       "rotate": 0,
-      "menu": true,
-      "on-click": "ags toggle calendar",
-      "on-click-right": "mode",
-      "tooltip": true,
+      "on-click": "/usr/local/bin/ags -t ActivityCenter",
       "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
       "calendar": {
-        "mode": "year",
+        "mode": "month",
         "mode-mon-col": 3,
         "on-scroll": 1,
         "on-click-right": "mode",
@@ -80,8 +87,8 @@
     },
     "custom/keyboard_layout": {
       "interval": 1,
-      "exec": "~/.config/waybar/scripts/kb_layout.sh",
-      "on-click": "sh -c 'kb=$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\"); hyprctl switchxkblayout \"$kb\" next && pkill -RTMIN+1 waybar'"
+      "exec": "~/.config/waybar/scripts/kb_layout_sway.sh",
+      "on-click": "swaymsg input type:keyboard xkb_switch_layout next && pkill -RTMIN+1 waybar"
     },
     "custom/menu": {
       "format": "󰅃",
@@ -107,7 +114,7 @@
     "pulseaudio": {
       "format": "{icon}  {volume}%",
       "rotate": 0,
-      "format-muted": "",
+      "format-muted": "婢",
       "tooltip-format": "{icon} {desc} // {volume}%",
       "scroll-step": 5,
       "format-icons": {
@@ -118,9 +125,9 @@
         "portable": "",
         "car": "",
         "default": [
-          "",
-          "",
-          ""
+          "",
+          "",
+          ""
         ]
       }
     },
@@ -129,11 +136,11 @@
       "format": "",
       "format-alt": "{}<span color='orange'>[{time}]</span>",
       "tooltip": true,
-      "tooltip-spacing": 10,
-      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar"
+      "tooltip-spacing": 20,
+      "on-click-right": "pkill waybar && waybar -c ~/.config/waybar/config-single-sway.jsonc -s ~/.config/waybar/style.css &"
     },
     "upower#headset": {
-      "format": "{percentage}",
+      "format": " {percentage}",
       "native-path": "/org/freedesktop/UPower/devices/headset_dev_A6_98_9A_0D_D3_49",
       "show-icon": false,
       "tooltip": false
@@ -180,110 +187,6 @@
       "rotate": 0,
       "device": "pulseaudio",
       "scroll-step": 1
-    },
-    "custom/powermenu": {
-      "format": "⏻",
-      "tooltip": false,
-      "on-click": "~/.config/wofi/powermenu/powermenu.sh",
-      "on-click-right": "~/.config/wofi/powermenu/powermenu.sh"
-    }
-  },
-  {
-    // HDMI-A-1 monitor (external)
-    "output": "HDMI-A-1",
-    "name": "hdmia1",
-    "position": "top",
-    "layer": "top",
-    "mod": "dock",
-    "exclusive": true,
-    "fixed-center": true,
-    "margin-top": 4,
-    "margin-left": 55,
-    "margin-right": 55,
-    "margin-bottom": 0,
-    "spacing": 10,
-    "reload_style_on_change": true,
-    "modules-left": [
-      "hyprland/workspaces",
-      "wlr/taskbar",
-      "mpris"
-    ],
-    "modules-right": [
-      "custom/keyboard_layout",
-      "custom/calendar",
-      "clock",
-      "custom/powermenu"
-    ],
-    "hyprland/workspaces": {
-      "format": "{name}",
-      "show-empty": true,
-      "on-click": "activate",
-      "all-outputs": false
-    },
-    "wlr/taskbar": {
-      "format": "{icon}",
-      "icon-size": 15,
-      "tooltip-format": "{title}",
-      "on-click": "activate",
-      "on-click-middle": "close"
-    },
-    "mpris": {
-      "format": "<span color='#87a987'>{player_icon} </span>{dynamic}",
-      "format-paused": "<span color='grey'>{status_icon} {dynamic}</span>",
-      "max-length": 30,
-      "player-icons": {
-        "default": "⏸",
-        "mpv": "🎵"
-      },
-      "status-icons": {
-        "paused": "▶"
-      },
-      "ignored-players": [
-        "firefox"
-      ]
-    },
-    "custom/calendar": {
-      "format": "󱕻", // Calendar icon (you can change this to any icon you prefer)
-      "tooltip": false,
-      "on-click": "ags toggle calendar",
-      "return-type": "json",
-      "interval": "once"
-    },
-    "clock": {
-      "format": "{:%I:%M %p}",
-      "rotate": 0,
-      "on-click": "ags toggle calendar",
-      "tooltip": true,
-      "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
-      "calendar": {
-        "mode": "year",
-        "mode-mon-col": 3,
-        "on-scroll": 1,
-        "on-click-right": "mode",
-        "format": {
-          "months": "<span color='#c5c9c5'><b>{}</b></span>",
-          "weekdays": "<span color='#e6c384'><b>{}</b></span>",
-          "today": "<span color='#e46876'><b>{}</b></span>"
-        }
-      },
-      "actions": {
-        "on-click-right": "mode",
-        "on-click-forward": "tz_up",
-        "on-click-backward": "tz_down",
-        "on-scroll-up": "shift_up",
-        "on-scroll-down": "shift_down"
-      }
-    },
-    "custom/keyboard_layout": {
-      "interval": 1,
-      "exec": "~/.config/waybar/scripts/kb_layout.sh",
-      "on-click": "hyprctl switchxkblayout '$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\")' next"
-    },
-    "custom/powermenu": {
-      "format": "⏻",
-      "tooltip": false,
-      "on-click": "~/.config/wofi/powermenu/powermenu.sh",
-      "on-click-right": "~/.config/wofi/powermenu/powermenu.sh"
     }
   }
 ]

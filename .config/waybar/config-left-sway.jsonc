@@ -6,16 +6,16 @@
     "position": "top",
     "layer": "top",
     "mod": "dock",
-    "margin-top": 4,
-    "margin-left": 55,
-    "margin-right": 55,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
     "margin-bottom": 0,
     "spacing": 10,
     "fixed-center": true,
     "exclusive": true,
     "reload_style_on_change": true,
     "modules-left": [
-      "hyprland/workspaces",
+      "sway/workspaces",
       "wlr/taskbar",
       "mpris"
     ],
@@ -28,12 +28,24 @@
       "group/expand-3",
       "custom/update-packages",
       "custom/keyboard_layout",
-      "upower"
+      "upower",
+      "custom/powermenu"
     ],
-    "hyprland/workspaces": {
+    "sway/workspaces": {
       "format": "{name}",
-      "show-empty": true,
-      "on-click": "activate",
+      "format-icons": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "0"
+      },
+      "disable-scroll": false,
       "all-outputs": false
     },
     "wlr/taskbar": {
@@ -53,10 +65,13 @@
     "clock": {
       "format": "{:%I:%M %p}",
       "rotate": 0,
-      "on-click": "/usr/local/bin/ags -t ActivityCenter",
+      "menu": true,
+      "on-click": "ags toggle calendar",
+      "on-click-right": "mode",
+      "tooltip": true,
       "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
       "calendar": {
-        "mode": "month",
+        "mode": "year",
         "mode-mon-col": 3,
         "on-scroll": 1,
         "on-click-right": "mode",
@@ -76,8 +91,8 @@
     },
     "custom/keyboard_layout": {
       "interval": 1,
-      "exec": "~/.config/waybar/scripts/kb_layout.sh",
-      "on-click": "sh -c 'kb=$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\"); hyprctl switchxkblayout \"$kb\" next && pkill -RTMIN+1 waybar'"
+      "exec": "~/.config/waybar/scripts/kb_layout_sway.sh",
+      "on-click": "swaymsg input type:keyboard xkb_switch_layout next && pkill -RTMIN+1 waybar"
     },
     "custom/menu": {
       "format": "󰅃",
@@ -103,7 +118,7 @@
     "pulseaudio": {
       "format": "{icon}  {volume}%",
       "rotate": 0,
-      "format-muted": "婢",
+      "format-muted": "",
       "tooltip-format": "{icon} {desc} // {volume}%",
       "scroll-step": 5,
       "format-icons": {
@@ -114,9 +129,9 @@
         "portable": "",
         "car": "",
         "default": [
-          "",
-          "",
-          ""
+          "",
+          "",
+          ""
         ]
       }
     },
@@ -125,11 +140,11 @@
       "format": "",
       "format-alt": "{}<span color='orange'>[{time}]</span>",
       "tooltip": true,
-      "tooltip-spacing": 20,
-      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar"
+      "tooltip-spacing": 10,
+      "on-click-right": "pkill waybar && waybar -c ~/.config/waybar/config-left-sway.jsonc -s ~/.config/waybar/style.css &"
     },
     "upower#headset": {
-      "format": " {percentage}",
+      "format": "{percentage}",
       "native-path": "/org/freedesktop/UPower/devices/headset_dev_A6_98_9A_0D_D3_49",
       "show-icon": false,
       "tooltip": false
@@ -176,6 +191,12 @@
       "rotate": 0,
       "device": "pulseaudio",
       "scroll-step": 1
+    },
+    "custom/powermenu": {
+      "format": "⏻",
+      "tooltip": false,
+      "on-click": "~/.config/wofi/powermenu/powermenu.sh",
+      "on-click-right": "~/.config/wofi/powermenu/powermenu.sh"
     }
   },
   {
@@ -187,30 +208,38 @@
     "mod": "dock",
     "exclusive": true,
     "fixed-center": true,
-    "margin-top": 4,
-    "margin-left": 55,
-    "margin-right": 55,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
     "margin-bottom": 0,
     "spacing": 10,
     "reload_style_on_change": true,
     "modules-left": [
-      "hyprland/workspaces",
+      "sway/workspaces",
       "wlr/taskbar",
       "mpris"
     ],
     "modules-right": [
-      "group/expand",
-      "group/expand-3",
-      "custom/update-packages",
       "custom/keyboard_layout",
       "custom/calendar",
       "clock",
-      "upower"
+      "custom/powermenu"
     ],
-    "hyprland/workspaces": {
+    "sway/workspaces": {
       "format": "{name}",
-      "show-empty": true,
-      "on-click": "activate",
+      "format-icons": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "0"
+      },
+      "disable-scroll": false,
       "all-outputs": false
     },
     "wlr/taskbar": {
@@ -235,47 +264,6 @@
         "firefox"
       ]
     },
-    "custom/menu": {
-      "format": "󰅃",
-      "rotate": 90
-    },
-    "tray": {
-      "icon-size": 16,
-      "rotate": 0,
-      "spacing": 3
-    },
-    "group/expand": {
-      "orientation": "horizontal",
-      "drawer": {
-        "transition-duration": 600,
-        "children-class": "not-power",
-        "transition-to-left": true
-      },
-      "modules": [
-        "custom/menu",
-        "tray"
-      ]
-    },
-    "pulseaudio": {
-      "format": "{icon}  {volume}%",
-      "rotate": 0,
-      "format-muted": "婢",
-      "tooltip-format": "{icon} {desc} // {volume}%",
-      "scroll-step": 5,
-      "format-icons": {
-        "headphone": "",
-        "hands-free": "",
-        "headset": "",
-        "phone": "",
-        "portable": "",
-        "car": "",
-        "default": [
-          "",
-          "",
-          ""
-        ]
-      }
-    },
     "custom/calendar": {
       "format": "󱕻", // Calendar icon (you can change this to any icon you prefer)
       "tooltip": false,
@@ -286,10 +274,11 @@
     "clock": {
       "format": "{:%I:%M %p}",
       "rotate": 0,
-      "on-click": "/usr/bin/ags -t ActivityCenter",
+      "on-click": "ags toggle calendar",
+      "tooltip": true,
       "tooltip-format": "<tt><span font='13'>{calendar}</span></tt>",
       "calendar": {
-        "mode": "month",
+        "mode": "year",
         "mode-mon-col": 3,
         "on-scroll": 1,
         "on-click-right": "mode",
@@ -307,38 +296,16 @@
         "on-scroll-down": "shift_down"
       }
     },
-    "group/expand-3": {
-      "orientation": "horizontal",
-      "drawer": {
-        "transition-duration": 600,
-        "children-class": "not-power",
-        "transition-to-left": true,
-        "click-to-reveal": false
-      },
-      "modules": [
-        "pulseaudio",
-        "pulseaudio/slider"
-      ]
-    },
-    "pulseaudio/slider": {
-      "min": 5,
-      "max": 100,
-      "rotate": 0,
-      "device": "pulseaudio",
-      "scroll-step": 1
-    },
-    "upower": {
-      "icon-size": 16,
-      "format": "",
-      "format-alt": "{}<span color='orange'>[{time}]</span>",
-      "tooltip": true,
-      "tooltip-spacing": 20,
-      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar"
-    },
     "custom/keyboard_layout": {
       "interval": 1,
-      "exec": "~/.config/waybar/scripts/kb_layout.sh",
-      "on-click": "hyprctl switchxkblayout '$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\")' next"
+      "exec": "~/.config/waybar/scripts/kb_layout_sway.sh",
+      "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
+    },
+    "custom/powermenu": {
+      "format": "⏻",
+      "tooltip": false,
+      "on-click": "~/.config/wofi/powermenu/powermenu.sh",
+      "on-click-right": "~/.config/wofi/powermenu/powermenu.sh"
     }
   }
 ]

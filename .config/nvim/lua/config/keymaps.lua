@@ -16,3 +16,9 @@ map("n", "<leader>js", "<cmd>silent %!jq .<cr>", { desc = "Json format", silent 
 
 --change root
 map("n", "<leader>h", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", { desc = "change root" })
+
+-- Copy text between quotes to clipboard
+map("n", "<C-]>", function()
+  vim.cmd('normal! yi"')
+  vim.fn.setreg("+", vim.fn.getreg('"'))
+end, { desc = "Copy text between quotes to clipboard", silent = true })

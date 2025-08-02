@@ -23,8 +23,16 @@ lazy = true
 animation = "fromTop"
 lazy = true
 class = "Alacritty"
-# command = "ghostty"
 command = "sh -lc 'alacritty -e tmux new-session -A -s scratchpad'"
+size = "75% 60%"
+max_size = "1920px 100%"
+margin = 50
+
+[scratchpads.termghost]
+animation = "fromTop"
+lazy = true
+class = "com.mitchellh.ghostty"
+command = "ghostty -e tmux -u"
 size = "75% 60%"
 max_size = "1920px 100%"
 margin = 50
@@ -33,7 +41,16 @@ margin = 50
 animation = "fromTop"
 lazy = true
 class = "scratchpad-pkg"
-command = "alacritty --class scratchpad-pkg --config-file ~/.config/alacritty/alacritty-updates.toml -e tmux new-session -A -s Updating-Packages '$HOME/.config/polybar/scripts/upgrade-packages.sh'"
+command = "alacritty --class scratchpad-pkg --config-file ~/.config/alacritty/alacritty-updates.toml -e tmux new-session -A -s Updating-Packages '$HOME/.config/polybar/scripts/upgrade-packages.sh && echo da4f12!'"
+size = "40% 90%"
+max_size = "1920px 100%"
+margin = 50
+
+[scratchpads.ssh]
+animation = "fromTop"
+lazy = true
+class = "ssh-jupyter"
+command = "alacritty --class ssh-jupyter -e tmux new-session -A -s Jupyter-Connection 'ssh -L 8888:localhost:8888 vagner.oliveira@headnode'"
 size = "40% 90%"
 max_size = "1920px 100%"
 margin = 50

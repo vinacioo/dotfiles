@@ -45,16 +45,15 @@
     font-family: "JetBrainsMono Nerd Font", 'Symbols Only';
     border: none;
     min-height: 0px;
-    border-radius: 0px;
-    padding: 1px 1px 1px 1px;
+    border-radius: 5px;
 }
 
-/* .edp *, .hdmi *, .hdmia1 * { */
-/*     font-family: "JetBrainsMono Nerd Font", 'Symbols Only';  */
-/*     border: none; */
-/*     padding: 1px 3px 1px 3px; */
-/*     border-radius: 3px; */
-/* } */
+.edp *, .hdmi *, .hdmia1 * {
+    font-family: "JetBrainsMono Nerd Font", 'Symbols Only'; 
+    border: none; 
+    padding: 1px 3px 1px 3px;
+    border-radius: 3px; 
+}
 
 window#waybar {
     background-color: @bg;
@@ -130,53 +129,30 @@ window.edp#waybar, window.hdmi#waybar, window.hdmi1#waybar {
     box-shadow: inset 0px 0px 0px 2px #282828;
 }
 
-/* taskbar - updated to match workspaces style */
+/* taskbar */
 #taskbar {
-    border-radius: 0px;
-    border: 0px;
-    font-weight: normal;
-    font-style: normal;
-    opacity: 0.9;
+    padding: 0px;
+}
+
+#taskbar button.active {
+    background: rgba(255, 255, 255, 0.04);
+    color: @white_bright;
+    padding-left: 7px;
+    padding-right: 7px;
+    animation: tb_active 20s ease-in-out 1;
+    transition: all 0.4s cubic-bezier(.55,-0.68,.48,1.682);
+    min-height: 9px; 
 }
 
 #taskbar button {
-    background: @bg;
-    padding-right: 2px;
-    padding-left: 2px;
-    opacity: 0.6;
-    transition: all 0.3s ease-in-out;
-    border-radius: 0px;
+    border-radius: 5px;
 }
 
-/* Active taskbar button - matches active workspace */
-#taskbar button.visible,
-#taskbar button.active {
-    background: @bg;
-    border-radius: 0px;
-    transition: all 0.3s ease-in-out;
-    opacity: 1.0;
-    box-shadow: inset 0px 0px 0px 2px @bg;
-}
-
-/* Taskbar button hover - matches workspace hover */
 #taskbar button:hover {
-    color: @yellow_bright;
-    background: alpha(@bg, 0.9);
-    opacity: 0.9;
-    border-radius: 0px;
+    background: @hover_bg;
+    opacity: 1;
     border: none;
-    box-shadow: inset 0px 0px 0px 20px @bg;
-}
-
-/* Optional: if you want to handle minimized or urgent tasks */
-#taskbar button.minimized {
-    color: @cyan_normal;
-    opacity: 0.3;
-}
-
-#taskbar button.urgent {
-    background-color: transparent;
-    color: @warning;
+    box-shadow: none;
 }
 
 /* tooltip */
@@ -206,15 +182,12 @@ tooltip label {
 
 #custom-calendar {
     color: #e46876;  /* Kanagawa blue */
-    padding-right: 4px;
 }
 
 /* clock */
 #clock {
     color: @blue_bright;
     font-size: 14;
-    padding-right: 5px;
-    padding-left: 0px;
     font-family: "JetBrainsMono Nerd Font";
     background: @bg_transparent;
     opacity: 1;
@@ -245,6 +218,8 @@ tooltip label {
 #custom-power {
     color: @white_bright;
     background: rgba(22, 19, 32, 0.9);
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 /* network */
@@ -278,16 +253,13 @@ tooltip label {
 /* keyboard-layout */
 #custom-keyboard_layout {
     color: @white_normal;
-    padding-right: 5px;
-    padding-left: 5px;
     opacity: 1;
 }
 
 #upower {
     font-size: 13px;
     color: @green_bright;
-    padding-right: 5px;
-    padding-left: 0px;
+    margin: -10px;
     background-color: transparent;
     opacity: 1;
 }
@@ -379,12 +351,6 @@ tooltip label {
     color: @white_bright;
 }
 
-#custom-update-packages {
-    padding-right: 10px;
-    background-color: transparent;
-}
-
-
 /* Style for launchers */
 #tray menu * {
     min-height: 16px;
@@ -414,20 +380,9 @@ tooltip label {
     background-color: transparent;
 }
 
-
-#backlight-slider,
-#pulseaudio-slider {
-    background: @bg_transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    box-shadow: none;
-}
-
 #backlight-slider slider,
 #pulseaudio-slider slider {
     background: @bg_transparent;
-    padding-right: 15px;
-    padding-left: 5px;
     box-shadow: none;
 }
 
@@ -442,8 +397,6 @@ tooltip label {
 #backlight-slider highlight,
 #pulseaudio-slider highlight {
     border-radius: 5px;
-    padding-right: 5px;
-    padding-left: 5px;
     background-color: @blue_normal;
 }
 

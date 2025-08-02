@@ -447,6 +447,27 @@ return {
       right_sep = "block",
     }
 
+    -- counting matches
+    component.search_count = {
+      provider = function()
+        if vim.v.hlsearch == 1 then
+          local sinfo = vim.fn.searchcount({ maxcount = 0 })
+          local search_stat = sinfo.incomplete > 0 and "[?/?]"
+            or sinfo.total > 0 and ("[%s/%s]"):format(sinfo.current, sinfo.total)
+            or nil
+          if search_stat ~= nil then
+            return " " .. search_stat
+          end
+        end
+        return ""
+      end,
+      hl = {
+        fg = color.orange,
+        bg = color.bg_0,
+      },
+      left_sep = "block",
+    }
+
     -- Define custom highlights for the icon and the text
     vim.api.nvim_set_hl(0, "VenvIcon", { fg = color.green, bg = color.bg_0 })
     vim.api.nvim_set_hl(0, "VenvText", { fg = color.white_darker, bg = color.bg_0 })
@@ -465,6 +486,7 @@ return {
       component.navic_position,
     }
     local right = {
+      component.search_count,
       component.venv,
       component.file_type,
       component.separator_lsp_left_0,

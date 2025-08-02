@@ -7,38 +7,46 @@
     "layer": "top",
     "mod": "dock",
     "margin-top": 4,
-    "margin-left": 55,
-    "margin-right": 55,
+    "margin-left": 4,
+    "margin-right": 4,
     "margin-bottom": 0,
-    "spacing": 10,
+    "spacing": 0,
     "fixed-center": true,
     "exclusive": true,
     "reload_style_on_change": true,
     "modules-left": [
-      "hyprland/workspaces",
+      "sway/workspaces",
       "wlr/taskbar",
       "mpris"
     ],
     "modules-center": [
-      "custom/calendar",
+      // "custom/calendar",
       "clock"
     ],
     "modules-right": [
       "group/expand",
-      "group/expand-3",
-      "custom/update-packages",
+      // "group/expand-3",
+      "pulseaudio",
+      "pulseaudio/slider",
       "custom/keyboard_layout",
+      "custom/update-packages",
       "upower"
     ],
-    "hyprland/workspaces": {
+    "sway/workspaces": {
       "format": "{name}",
-      "show-empty": true,
-      "on-click": "activate",
+      "format-icons": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      },
+      "disable-scroll": false,
       "all-outputs": false
     },
     "wlr/taskbar": {
       "format": "{icon}",
-      "icon-size": 15,
+      "icon-size": 13,
       "tooltip-format": "{title}",
       "on-click": "activate",
       "on-click-middle": "close"
@@ -77,7 +85,7 @@
     "custom/keyboard_layout": {
       "interval": 1,
       "exec": "~/.config/waybar/scripts/kb_layout.sh",
-      "on-click": "sh -c 'kb=$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\"); hyprctl switchxkblayout \"$kb\" next && pkill -RTMIN+1 waybar'"
+      "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
     },
     "custom/menu": {
       "format": "󰅃",
@@ -114,9 +122,9 @@
         "portable": "",
         "car": "",
         "default": [
-          "",
-          "",
-          ""
+          "",
+          "",
+          ""
         ]
       }
     },
@@ -126,7 +134,7 @@
       "format-alt": "{}<span color='orange'>[{time}]</span>",
       "tooltip": true,
       "tooltip-spacing": 20,
-      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar"
+      "on-click-right": "pkill waybar && waybar -c ~/.config/waybar/config-right-sway.jsonc -s ~/.config/waybar/style.css &"
     },
     "upower#headset": {
       "format": " {percentage}",
@@ -163,12 +171,12 @@
       ]
     },
     "custom/update-packages": {
+      "format": "{}",
       "exec": "~/.config/waybar/scripts/update_packages.sh",
       "interval": 10,
-      "tooltip": false,
-      "format": "{}",
+      "tooltip": true,
       "return-type": "text",
-      "on-click": "~/.pyenv/versions/3.13.1/bin/pypr toggle updates"
+      "on-click": "alacritty --class scratchpad-pkg --config-file ~/.config/alacritty/alacritty-updates.toml -e tmux new-session -A -s Updating-Packages '/home/vinacio/.config/waybar/scripts/upgrade-packages.sh && echo da4f12!'"
     },
     "pulseaudio/slider": {
       "min": 5,
@@ -188,34 +196,42 @@
     "exclusive": true,
     "fixed-center": true,
     "margin-top": 4,
-    "margin-left": 55,
-    "margin-right": 55,
+    "margin-left": 4,
+    "margin-right": 4,
     "margin-bottom": 0,
-    "spacing": 10,
+    "spacing": 0,
     "reload_style_on_change": true,
     "modules-left": [
-      "hyprland/workspaces",
+      "sway/workspaces",
       "wlr/taskbar",
       "mpris"
     ],
     "modules-right": [
       "group/expand",
-      "group/expand-3",
-      "custom/update-packages",
+      // "group/expand-3",
+      "pulseaudio",
+      "pulseaudio/slider",
       "custom/keyboard_layout",
-      "custom/calendar",
+      "custom/update-packages",
+      // "custom/calendar",
       "clock",
       "upower"
     ],
-    "hyprland/workspaces": {
+    "sway/workspaces": {
       "format": "{name}",
-      "show-empty": true,
-      "on-click": "activate",
+      "format-icons": {
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "0"
+      },
+      "disable-scroll": false,
       "all-outputs": false
     },
     "wlr/taskbar": {
       "format": "{icon}",
-      "icon-size": 15,
+      "icon-size": 13,
       "tooltip-format": "{title}",
       "on-click": "activate",
       "on-click-middle": "close"
@@ -270,9 +286,9 @@
         "portable": "",
         "car": "",
         "default": [
-          "",
-          "",
-          ""
+          "",
+          "",
+          ""
         ]
       }
     },
@@ -333,12 +349,20 @@
       "format-alt": "{}<span color='orange'>[{time}]</span>",
       "tooltip": true,
       "tooltip-spacing": 20,
-      "on-click-right": "pkill waybar & hyprctl dispatch exec waybar"
+      "on-click-right": "pkill waybar && waybar -c ~/.config/waybar/config-right-sway.jsonc -s ~/.config/waybar/style.css &"
+    },
+    "custom/update-packages": {
+      "format": "{}",
+      "exec": "~/.config/waybar/scripts/update_packages.sh",
+      "interval": 10,
+      "tooltip": true,
+      "return-type": "text",
+      "on-click": "~/.config/waybar/scripts/upgrade.sh"
     },
     "custom/keyboard_layout": {
       "interval": 1,
       "exec": "~/.config/waybar/scripts/kb_layout.sh",
-      "on-click": "hyprctl switchxkblayout '$(hyprctl devices -j | jq -r \".keyboards[] | select(.main == true) | .name\")' next"
+      "on-click": "swaymsg input type:keyboard xkb_switch_layout next"
     }
   }
 ]

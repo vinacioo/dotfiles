@@ -6,7 +6,7 @@ status --is-interactive; and source (jump shell fish | psub)
 set -g fish_greeting
 
 set -gx EDITOR nvim
-set -Ux TERMINAL alacritty
+set -Ux TERMINAL ghostty
 
 # Remove the virtualenv prompt from fish config, will be in starship
 set -Ux VIRTUAL_ENV_DISABLE_PROMPT 1
@@ -108,6 +108,9 @@ set -U fish_user_paths $HOME/.pyenv/versions/3.13.1/bin $fish_user_paths
 
 # for go bin
 set -gx PATH $HOME/go/bin $PATH
+
+# for bin
+set -gx PATH $HOME/.local/bin $PATH
 
 # starship
 starship init fish | source
